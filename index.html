@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="ja" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -137,125 +137,132 @@
 </head>
 <body class="min-h-screen flex flex-col font-sans selection:bg-rider-red selection:text-white">
 
-    <!-- ==================== トップヘッダー ==================== -->
+    <!-- ==================== トップヘッダー（スマホでも圧迫しないコンパクト設計） ==================== -->
     <header class="border-b border-rider-border bg-rider-dark/95 backdrop-blur-md sticky top-0 z-40 shadow-2xl">
-        <!-- 上段：タイトル＆CSVツールバー -->
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b border-gray-800/80">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rider-red via-red-700 to-amber-500 p-0.5 shadow-lg shadow-red-900/40 flex items-center justify-center">
-                    <div class="w-full h-full bg-gray-950 rounded-[10px] flex items-center justify-center">
-                        <i class="fa-solid fa-mask text-rider-red text-lg drop-shadow-[0_0_8px_rgba(230,0,18,0.8)]"></i>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded bg-rider-red/20 text-red-400 border border-red-500/30 font-bold">KAMEN RIDER QUIZ</span>
-                    </div>
-                    <h1 class="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-1.5">
-                        仮面ライダー<span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">言えるかな？</span>
-                    </h1>
-                </div>
+        <!-- 上段：タイトル＆音声ボタン -->
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-2 border-b border-gray-800/80">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <h1 class="text-base sm:text-xl font-black tracking-tight text-white truncate flex items-center gap-1.5">
+                    <span>仮面ライダー</span><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">言えるかな？</span>
+                </h1>
+                <span class="hidden sm:inline-block text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded bg-rider-red/20 text-red-400 border border-red-500/30 font-bold shrink-0">KAMEN RIDER QUIZ</span>
             </div>
 
-            <!-- 音声ボタン -->
-            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <!-- 音声ボタン＆スマホ用サイズ切替 -->
+            <div class="flex items-center gap-1.5 shrink-0">
+                <!-- カードサイズ切替（スマホ・PC共通） -->
+                <div class="flex items-center bg-gray-900 p-0.5 rounded-lg border border-gray-800">
+                    <button data-size="sm" class="size-btn px-2 py-1 rounded text-[11px] text-gray-400 hover:text-white transition" title="コンパクト表示">
+                        <i class="fa-solid fa-table-cells"></i>
+                    </button>
+                    <button data-size="md" class="size-btn px-2 py-1 rounded text-[11px] bg-gray-700 text-white transition" title="標準サイズ">
+                        <i class="fa-solid fa-table-cells-large"></i>
+                    </button>
+                    <button data-size="lg" class="size-btn px-2 py-1 rounded text-[11px] text-gray-400 hover:text-white transition" title="大きめ表示">
+                        <i class="fa-solid fa-square"></i>
+                    </button>
+                </div>
+
                 <!-- 効果音ON/OFF -->
-                <button id="soundToggleBtn" class="p-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-600/80 transition" title="効果音 ON/OFF">
+                <button id="soundToggleBtn" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-600/80 transition" title="効果音 ON/OFF">
                     <i id="soundIcon" class="fa-solid fa-volume-high"></i>
                 </button>
             </div>
         </div>
 
         <!-- 下段：ゲーム操作・タイマー・入力バー -->
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 hero-stripes">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
+        <div class="max-w-7xl mx-auto px-2.5 sm:px-6 py-2 sm:py-3 hero-stripes">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 items-center">
                 
-                <!-- 左：タイマー＆進捗ステータス (4 cols) -->
-                <div class="lg:col-span-4 flex items-center justify-between sm:justify-start gap-3 bg-gray-950/90 border border-gray-800 px-3.5 py-2 rounded-xl shadow-inner">
+                <!-- 左：タイマー＆進捗ステータス (スマホでは1行にコンパクト集約) -->
+                <div class="lg:col-span-4 flex items-center justify-between gap-2.5 bg-gray-950/90 border border-gray-800 px-3 py-1.5 sm:py-2 rounded-xl shadow-inner">
                     <!-- タイマー表示 -->
-                    <div class="flex items-center gap-2.5">
-                        <div id="timerIndicator" class="w-3 h-3 rounded-full bg-gray-600 transition-colors duration-300"></div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <div id="timerIndicator" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gray-600 transition-colors duration-300"></div>
                         <div>
-                            <div class="text-[10px] text-gray-400 font-bold tracking-wider uppercase leading-none">TIME RECORD</div>
-                            <div id="timerDisplay" class="font-mono text-2xl sm:text-3xl font-black text-white tracking-wider leading-tight">
-                                00:00.<span class="text-lg text-amber-400">00</span>
+                            <div class="text-[9px] sm:text-[10px] text-gray-400 font-bold tracking-wider uppercase leading-none">TIME</div>
+                            <div id="timerDisplay" class="font-mono text-xl sm:text-3xl font-black text-white tracking-wider leading-tight">
+                                00:00.<span class="text-sm sm:text-lg text-amber-400">00</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="h-8 w-px bg-gray-800"></div>
+                    <div class="h-7 w-px bg-gray-800 shrink-0"></div>
 
                     <!-- スコア・進捗表示 -->
-                    <div class="flex-1 min-w-[110px]">
-                        <div class="flex justify-between items-baseline mb-1">
-                            <span class="text-[11px] text-gray-400 font-bold">出題解放数</span>
-                            <span class="font-mono text-sm sm:text-base font-black text-amber-400">
-                                <span id="correctCount" class="text-white text-lg">0</span> / <span id="totalCount">0</span>
+                    <div class="flex-1 min-w-[90px]">
+                        <div class="flex justify-between items-baseline mb-0.5">
+                            <span class="text-[10px] sm:text-[11px] text-gray-400 font-bold">解放数</span>
+                            <span class="font-mono text-xs sm:text-base font-black text-amber-400">
+                                <span id="correctCount" class="text-white text-sm sm:text-lg">0</span> / <span id="totalCount">0</span>
                             </span>
                         </div>
-                        <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden p-0.5 border border-gray-700">
+                        <div class="w-full h-1.5 sm:h-2 bg-gray-800 rounded-full overflow-hidden p-0.5 border border-gray-700">
                             <div id="progressBar" class="h-full bg-gradient-to-r from-rider-red via-amber-500 to-yellow-300 rounded-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 中央：ライダー名入力ボックス (5 cols) -->
+                <!-- 中央：ライダー名入力ボックス (text-baseでスマホの自動ズームを防止) -->
                 <div class="lg:col-span-5 relative">
                     <div class="relative flex items-center">
-                        <div class="absolute left-3.5 text-gray-400 pointer-events-none">
-                            <i class="fa-solid fa-bolt text-amber-400"></i>
+                        <div class="absolute left-3 text-gray-400 pointer-events-none">
+                            <i class="fa-solid fa-bolt text-amber-400 text-sm"></i>
                         </div>
                         <input 
                             type="text" 
                             id="riderInput" 
-                            placeholder="ライダー名を入力" 
+                            placeholder="ライダー名を入力..." 
                             disabled
                             autocomplete="off"
-                            class="w-full pl-10 pr-20 py-2.5 sm:py-3 rounded-xl bg-gray-950 border-2 border-gray-700 text-white placeholder-gray-500 text-sm sm:text-base font-bold focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 disabled:opacity-60 disabled:cursor-not-allowed transition shadow-inner"
+                            autocapitalize="off"
+                            enterkeyhint="send"
+                            class="w-full pl-9 pr-16 py-2 sm:py-2.5 rounded-xl bg-gray-950 border-2 border-gray-700 text-white placeholder-gray-500 text-base font-bold focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 disabled:opacity-60 disabled:cursor-not-allowed transition shadow-inner"
                         >
                         <button 
                             id="submitAnswerBtn" 
                             disabled
-                            class="absolute right-1.5 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-rider-red to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs sm:text-sm shadow disabled:opacity-40 disabled:pointer-events-none transition"
+                            class="absolute right-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-rider-red to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs sm:text-sm shadow disabled:opacity-40 disabled:pointer-events-none transition"
                         >
                             回答
                         </button>
                     </div>
 
                     <!-- フィードバックメッセージ＆自動判定オプション -->
-                    <div class="flex flex-wrap items-center justify-between gap-2 mt-1.5 px-1">
-                        <div id="feedbackMessage" class="text-xs font-bold text-gray-400 truncate min-h-[18px] flex items-center gap-1.5">
-                            <span><i class="fa-solid fa-circle-info text-amber-400 mr-1"></i>漢字・ひらがな・カタカナ入力対応！「仮面ライダー」省略OK</span>
+                    <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-1 px-0.5">
+                        <div id="feedbackMessage" class="text-[11px] sm:text-xs font-bold text-gray-400 truncate max-w-full min-h-[16px] flex items-center gap-1">
+                            <i class="fa-solid fa-circle-info text-amber-400 shrink-0"></i>
+                            <span class="truncate">ひらがな・カタカナ対応！「仮面ライダー」省略OK</span>
                         </div>
-                        <div class="flex items-center gap-3 text-xs text-gray-300 shrink-0">
-                            <label class="inline-flex items-center gap-1 cursor-pointer select-none" title="入力中に一致したらEnter不要で即座に正解判定します">
-                                <input type="checkbox" id="autoSubmitToggle" checked class="rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
+                        <div class="flex items-center gap-2.5 text-[11px] sm:text-xs text-gray-300 shrink-0 ml-auto">
+                            <label class="inline-flex items-center gap-1 cursor-pointer select-none">
+                                <input type="checkbox" id="autoSubmitToggle" checked class="w-3.5 h-3.5 rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
                                 <span>自動判定</span>
                             </label>
-                            <label class="inline-flex items-center gap-1 cursor-pointer select-none" title="正解したライダーのマスへ自動でスクロールします">
-                                <input type="checkbox" id="autoScrollToggle" class="rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
+                            <label class="inline-flex items-center gap-1 cursor-pointer select-none">
+                                <input type="checkbox" id="autoScrollToggle" class="w-3.5 h-3.5 rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
                                 <span>自動スクロール</span>
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- 右：スタート / ギブアップ / リセットボタン (3 cols) -->
-                <div class="lg:col-span-3 flex items-center justify-end gap-2">
+                <!-- 右：スタート / ギブアップ / リセットボタン -->
+                <div class="lg:col-span-3 flex items-center justify-end gap-1.5 sm:gap-2">
                     <!-- スタートボタン -->
-                    <button id="startBtn" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-xl font-black text-sm sm:text-base text-white bg-gradient-to-r from-rider-red via-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 shadow-lg shadow-red-900/50 border border-red-400/40 transform active:scale-95 transition">
+                    <button id="startBtn" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-base text-white bg-gradient-to-r from-rider-red via-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 shadow-lg shadow-red-900/50 border border-red-400/40 transform active:scale-95 transition">
                         <i class="fa-solid fa-play"></i>
                         <span>スタート！</span>
                     </button>
 
                     <!-- ギブアップボタン -->
-                    <button id="giveUpBtn" disabled class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm text-amber-300 bg-amber-950/60 hover:bg-amber-900/70 border border-amber-700/60 disabled:opacity-40 disabled:pointer-events-none transition" title="タイマーを止めて未回答のライダーをすべて表示します">
+                    <button id="giveUpBtn" disabled class="inline-flex items-center justify-center gap-1 px-3 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-amber-300 bg-amber-950/60 hover:bg-amber-900/70 border border-amber-700/60 disabled:opacity-40 disabled:pointer-events-none transition" title="タイマーを止めて未回答のライダーをすべて表示します">
                         <i class="fa-solid fa-flag"></i>
                         <span>ギブアップ</span>
                     </button>
 
                     <!-- リセットボタン -->
-                    <button id="resetBtn" class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm text-gray-300 bg-gray-800 hover:bg-gray-700 border border-gray-700 transition" title="最初からやり直す">
+                    <button id="resetBtn" class="inline-flex items-center justify-center gap-1 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-gray-300 bg-gray-800 hover:bg-gray-700 border border-gray-700 transition" title="最初からやり直す">
                         <i class="fa-solid fa-rotate-right"></i>
                         <span class="hidden xl:inline">リセット</span>
                     </button>
@@ -266,73 +273,73 @@
     </header>
 
     <!-- ==================== 出題条件＆ソート設定パネル ==================== -->
-    <section class="max-w-7xl w-full mx-auto px-3 sm:px-6 pt-4 pb-2 space-y-2.5">
-        <!-- メインチェックボックス群（ご指定の5項目＋補助設定） -->
-        <div class="p-3 sm:p-3.5 rounded-2xl bg-gray-900/90 border border-gray-800 shadow-lg flex flex-col gap-3">
+    <section class="max-w-7xl w-full mx-auto px-2.5 sm:px-6 pt-3 pb-1.5 space-y-2">
+        <!-- メインチェックボックス群 -->
+        <div class="p-2.5 sm:p-3.5 rounded-2xl bg-gray-900/90 border border-gray-800 shadow-lg flex flex-col gap-2.5">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded bg-rider-red/20 border border-rider-red/40 text-red-400 text-[11px] font-black tracking-wider">出題＆表示オプション</span>
-                    <span id="filterLockNotice" class="hidden text-[11px] text-amber-400 font-bold">
-                        <i class="fa-solid fa-lock mr-1"></i>プレイ中は出題範囲の変更をロックしています（シリーズソートは切替可能）
+                    <span class="px-2 py-0.5 rounded bg-rider-red/20 border border-rider-red/40 text-red-400 text-[10px] sm:text-[11px] font-black tracking-wider">出題＆表示オプション</span>
+                    <span id="filterLockNotice" class="hidden text-[10px] sm:text-[11px] text-amber-400 font-bold">
+                        <i class="fa-solid fa-lock mr-1"></i>プレイ中は出題範囲をロック中
                     </span>
                 </div>
-                <div class="text-xs text-gray-400 font-medium">
-                    現在の対象ライダー: <span id="activePoolCountText" class="text-white font-black font-mono">0</span> 人
+                <div class="text-[11px] sm:text-xs text-gray-400 font-medium">
+                    対象ライダー: <span id="activePoolCountText" class="text-white font-black font-mono">0</span> 人
                 </div>
             </div>
 
-            <!-- チェックボックス5つを並べるメイン行 -->
-            <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <!-- チェックボックス5つを並べるメイン行（スマホでは押しやすい2列グリッド、タブレット以上で横並び） -->
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5 sm:gap-2.5">
                 <!-- 1. シリーズソート -->
-                <label class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-950/40 transition">
-                    <input type="checkbox" id="chkSeriesSort" class="w-4 h-4 rounded accent-sky-500">
+                <label class="col-span-2 sm:col-span-1 cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-2 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-950/40 transition">
                     <div class="flex items-center gap-1.5">
+                        <input type="checkbox" id="chkSeriesSort" class="w-4 h-4 rounded accent-sky-500">
                         <i class="fa-solid fa-layer-group text-sky-400 text-xs"></i>
                         <span class="text-xs sm:text-sm font-bold text-gray-100">シリーズソート</span>
-                        <span class="text-[10px] text-gray-400 hidden sm:inline">（初登場作品順）</span>
                     </div>
+                    <span class="text-[10px] text-gray-400">初登場作品順</span>
                 </label>
 
                 <div class="h-6 w-px bg-gray-800 hidden sm:block"></div>
 
                 <!-- 2. 映像化作品のみ -->
-                <label id="labelVisualOnly" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-950/40 transition">
-                    <input type="checkbox" id="chkVisualOnly" checked class="w-4 h-4 rounded accent-emerald-500">
-                    <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-film text-emerald-400 text-xs"></i>
-                        <span class="text-xs sm:text-sm font-bold text-gray-100">映像化作品のみ</span>
-                        <span id="countVisualOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-emerald-300">0</span>
+                <label id="labelVisualOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-950/40 transition">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <input type="checkbox" id="chkVisualOnly" checked class="w-4 h-4 rounded accent-emerald-500 shrink-0">
+                        <i class="fa-solid fa-film text-emerald-400 text-xs shrink-0"></i>
+                        <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">映像化作品のみ</span>
                     </div>
+                    <span id="countVisualOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-emerald-300 shrink-0">0</span>
                 </label>
 
                 <!-- 3. 小説限定ライダー -->
-                <label id="labelNovelOnly" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-950/40 transition">
-                    <input type="checkbox" id="chkNovelOnly" class="w-4 h-4 rounded accent-amber-500">
-                    <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-book text-amber-400 text-xs"></i>
-                        <span class="text-xs sm:text-sm font-bold text-gray-100">小説限定ライダー</span>
-                        <span id="countNovelOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-amber-300">0</span>
+                <label id="labelNovelOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-950/40 transition">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <input type="checkbox" id="chkNovelOnly" class="w-4 h-4 rounded accent-amber-500 shrink-0">
+                        <i class="fa-solid fa-book text-amber-400 text-xs shrink-0"></i>
+                        <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">小説限定ライダー</span>
                     </div>
+                    <span id="countNovelOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-amber-300 shrink-0">0</span>
                 </label>
 
                 <!-- 4. 舞台限定ライダー -->
-                <label id="labelStageOnly" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-purple-500 has-[:checked]:bg-purple-950/40 transition">
-                    <input type="checkbox" id="chkStageOnly" class="w-4 h-4 rounded accent-purple-500">
-                    <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-masks-theater text-purple-400 text-xs"></i>
-                        <span class="text-xs sm:text-sm font-bold text-gray-100">舞台限定ライダー</span>
-                        <span id="countStageOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-purple-300">0</span>
+                <label id="labelStageOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-purple-500 has-[:checked]:bg-purple-950/40 transition">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <input type="checkbox" id="chkStageOnly" class="w-4 h-4 rounded accent-purple-500 shrink-0">
+                        <i class="fa-solid fa-masks-theater text-purple-400 text-xs shrink-0"></i>
+                        <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">舞台限定ライダー</span>
                     </div>
+                    <span id="countStageOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-purple-300 shrink-0">0</span>
                 </label>
 
                 <!-- 5. ゲーム限定ライダー -->
-                <label id="labelGameOnly" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-pink-500 has-[:checked]:bg-pink-950/40 transition">
-                    <input type="checkbox" id="chkGameOnly" class="w-4 h-4 rounded accent-pink-500">
-                    <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-gamepad text-pink-400 text-xs"></i>
-                        <span class="text-xs sm:text-sm font-bold text-gray-100">ゲーム限定ライダー</span>
-                        <span id="countGameOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-pink-300">0</span>
+                <label id="labelGameOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-pink-500 has-[:checked]:bg-pink-950/40 transition">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <input type="checkbox" id="chkGameOnly" class="w-4 h-4 rounded accent-pink-500 shrink-0">
+                        <i class="fa-solid fa-gamepad text-pink-400 text-xs shrink-0"></i>
+                        <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">ゲーム限定ライダー</span>
                     </div>
+                    <span id="countGameOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-pink-300 shrink-0">0</span>
                 </label>
             </div>
         </div>
@@ -340,37 +347,24 @@
         <!-- 下段：分類タブ ＆ 表示フィルター -->
         <div class="flex flex-wrap items-center justify-between gap-2">
             <!-- 分類絞り込みタブ -->
-            <div class="flex flex-wrap items-center gap-1.5" id="eraFilterContainer">
+            <div class="flex flex-wrap items-center gap-1 sm:gap-1.5" id="eraFilterContainer">
                 <!-- JSで動的に生成（すべて / 昭和 / 平成1期 / 平成2期 / 令和 ...） -->
             </div>
 
-            <!-- 状態フィルター＆ヒント＆グリッドサイズ切替 -->
-            <div class="flex items-center gap-2 ml-auto">
+            <!-- 状態フィルター＆ヒント切替 -->
+            <div class="flex items-center gap-1.5 sm:gap-2 ml-auto">
                 <!-- 状態フィルター -->
-                <select id="statusFilterSelect" class="bg-gray-900 border border-gray-700 text-gray-200 text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-400">
+                <select id="statusFilterSelect" class="bg-gray-900 border border-gray-700 text-gray-200 text-xs font-bold rounded-lg px-2 sm:px-2.5 py-1.5 focus:outline-none focus:border-amber-400">
                     <option value="ALL">すべて表示</option>
-                    <option value="UNANSWERED">未回答のみ表示</option>
-                    <option value="ANSWERED">正解済みのみ表示</option>
+                    <option value="UNANSWERED">未回答のみ</option>
+                    <option value="ANSWERED">正解済みのみ</option>
                 </select>
 
                 <!-- ヒント表示トグル -->
-                <button id="hintToggleBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-gray-900 hover:bg-gray-800 text-amber-400 border border-gray-700 transition flex items-center gap-1" title="未回答マスに初登場作品と頭文字ヒントを表示します">
+                <button id="hintToggleBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-gray-900 hover:bg-gray-800 text-amber-400 border border-gray-700 transition flex items-center gap-1 shrink-0" title="未回答マスに初登場作品と頭文字ヒントを表示します">
                     <i class="fa-regular fa-lightbulb"></i>
                     <span>ヒント: OFF</span>
                 </button>
-
-                <!-- カードサイズ切替 -->
-                <div class="hidden sm:flex items-center bg-gray-900 p-0.5 rounded-lg border border-gray-800">
-                    <button data-size="sm" class="size-btn px-2 py-1 rounded text-xs text-gray-400 hover:text-white transition" title="コンパクト表示">
-                        <i class="fa-solid fa-table-cells"></i>
-                    </button>
-                    <button data-size="md" class="size-btn px-2 py-1 rounded text-xs bg-gray-700 text-white transition" title="標準サイズ">
-                        <i class="fa-solid fa-table-cells-large"></i>
-                    </button>
-                    <button data-size="lg" class="size-btn px-2 py-1 rounded text-xs text-gray-400 hover:text-white transition" title="大きめ表示">
-                        <i class="fa-solid fa-square"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </section>
@@ -852,15 +846,6 @@
             resetGame();
         }
 
-        // ==================== 分類タブの動的生成 ====================
-                currentEraFilter = 'ALL';
-            }
-
-            buildEraTabs();
-            updateCheckboxCounts();
-            resetGame();
-        }
-
         // ==================== E列（分類）タブの動的生成 ====================
         function buildEraTabs() {
             const container = document.getElementById('eraFilterContainer');
@@ -919,7 +904,8 @@
 
         // ==================== 同階層の ./rider.csv 自動読込 ====================
         async function loadInitialCsvData() {
-            const candidateFiles = ['./rider.csv', './riders.csv'];
+            const candidateFiles = ['./rider.csv', './riders.csv', './Rider.csv', './Riders.csv'];
+            let loadedData = null;
 
             for (const filePath of candidateFiles) {
                 try {
@@ -928,17 +914,17 @@
                         const buffer = await response.arrayBuffer();
                         const text = decodeArrayBufferAuto(buffer);
                         const parsed = parseCSVText(text);
-                        if (parsed.length > 0) {
-                            initializeRidersData(parsed);
-                            return;
+                        if (parsed && parsed.length > 0) {
+                            loadedData = parsed;
+                            break;
                         }
                     }
                 } catch (err) {
-                    // fetch失敗時は次の候補または初期データへ
+                    // fetch失敗時は次の候補へ
                 }
             }
 
-            initializeRidersData(DEFAULT_RIDERS_DATA);
+            initializeRidersData(loadedData || DEFAULT_RIDERS_DATA);
         }
 
         function decodeArrayBufferAuto(buffer) {
@@ -989,22 +975,22 @@
                     ? `<span class="px-1.5 py-0.5 text-[10px] font-mono font-black rounded bg-amber-500 text-gray-950 shadow">OPEN</span>`
                     : `<span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-red-600 text-white shadow">未回答</span>`;
 
-                // 名前の文字数に応じてフォントサイズを最適化（画像枠の中で名前だけが美しく際立つように調整）
+                // 名前の文字数に応じてフォントサイズを最適化（スマホ2列表示でも読みやすく調整）
                 const nameLen = rider.name.length;
-                let nameFontSize = 'text-base sm:text-lg';
+                let nameFontSize = 'text-sm sm:text-lg';
                 if (nameLen >= 16) {
-                    nameFontSize = 'text-xs sm:text-sm';
+                    nameFontSize = 'text-[11px] sm:text-sm';
                 } else if (nameLen >= 11) {
-                    nameFontSize = 'text-sm sm:text-base';
+                    nameFontSize = 'text-xs sm:text-base';
                 }
 
                 card.className = `group relative rounded-xl border-2 ${borderClass} overflow-hidden flex flex-col transition-all duration-300`;
                 card.innerHTML = `
                     <!-- 画像枠風エリア：画像はスルーし、中央に「名前」だけを表示 -->
-                    <div class="relative aspect-[4/3] w-full ${frameBgClass} p-3 flex flex-col items-center justify-center text-center overflow-hidden select-none">
+                    <div class="relative aspect-[4/3] w-full ${frameBgClass} p-2 sm:p-3 flex flex-col items-center justify-center text-center overflow-hidden select-none">
                         <!-- 上部：番号＆ステータスバッジ -->
                         <div class="absolute top-1.5 left-1.5 right-1.5 flex items-center justify-between gap-1 pointer-events-none">
-                            <span class="px-1.5 py-0.5 rounded bg-black/70 text-[10px] font-mono font-bold text-gray-300 border border-white/10">
+                            <span class="px-1.5 py-0.5 rounded bg-black/70 text-[9px] sm:text-[10px] font-mono font-bold text-gray-300 border border-white/10">
                                 No.${rider.id}
                             </span>
                             <div class="flex items-center gap-1">
@@ -1019,17 +1005,17 @@
                         </div>
 
                         <!-- 下部：分類（昭和/平成/令和） -->
-                        <div class="absolute bottom-1.5 right-2 text-[10px] font-bold text-gray-400 bg-black/60 px-1.5 py-0.2 rounded border border-white/5">
+                        <div class="absolute bottom-1 right-1.5 text-[9px] sm:text-[10px] font-bold text-gray-400 bg-black/60 px-1.5 py-0.2 rounded border border-white/5">
                             ${escapeHtml(rider.era)}
                         </div>
                     </div>
 
                     <!-- カード下部フッター：ルビ（B列）＆初登場作品（C列） -->
-                    <div class="px-2.5 py-2 bg-gray-950 border-t border-gray-800/90 flex flex-col justify-center gap-0.5 text-center">
-                        <div class="text-[10px] text-amber-400/90 font-medium truncate" title="${escapeHtml(rider.ruby)}">
+                    <div class="px-2 py-1.5 sm:px-2.5 sm:py-2 bg-gray-950 border-t border-gray-800/90 flex flex-col justify-center gap-0.5 text-center">
+                        <div class="text-[9px] sm:text-[10px] text-amber-400/90 font-medium truncate" title="${escapeHtml(rider.ruby)}">
                             ${escapeHtml(rider.ruby || '―')}
                         </div>
-                        <div class="text-[11px] text-gray-400 font-bold truncate" title="初登場: ${escapeHtml(rider.work)}">
+                        <div class="text-[10px] sm:text-[11px] text-gray-400 font-bold truncate" title="初登場: ${escapeHtml(rider.work)}">
                             <i class="fa-solid fa-tv text-[9px] text-gray-500 mr-1"></i>${escapeHtml(rider.work)}
                         </div>
                     </div>
@@ -1082,11 +1068,11 @@
         // ==================== グリッド＆シリーズソート描画 ====================
         function getGridClassName() {
             if (currentGridSize === 'sm') {
-                return 'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2';
+                return 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-2';
             } else if (currentGridSize === 'lg') {
-                return 'grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5';
+                return 'grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3';
             } else {
-                return 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-2.5 sm:gap-3';
+                return 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3';
             }
         }
 
@@ -1617,9 +1603,9 @@
                 btn.addEventListener('click', () => {
                     currentGridSize = btn.getAttribute('data-size');
                     document.querySelectorAll('.size-btn').forEach(b => {
-                        b.className = 'size-btn px-2 py-1 rounded text-xs text-gray-400 hover:text-white transition';
+                        b.className = 'size-btn px-2 py-1 rounded text-[11px] text-gray-400 hover:text-white transition';
                     });
-                    btn.className = 'size-btn px-2 py-1 rounded text-xs bg-gray-700 text-white transition';
+                    btn.className = 'size-btn px-2 py-1 rounded text-[11px] bg-gray-700 text-white transition';
                     renderGrid();
                 });
             });
