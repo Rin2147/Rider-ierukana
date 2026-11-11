@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>仮面ライダー全部言えるかな？ゲーム | KAMEN RIDER QUIZ</title>
+    <title>仮面ライダー言えるかな？ | KAMEN RIDER QUIZ</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -150,10 +150,7 @@
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded bg-rider-red/20 text-red-400 border border-red-500/30 font-bold">KAMEN RIDER QUIZ</span>
-                        <span id="dataSourceBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50 font-medium">内蔵サンプルデータ</span>
-                        <button id="clearSavedCsvBtn" class="hidden text-[10px] px-2 py-0.5 rounded bg-gray-800 hover:bg-red-950 text-gray-300 hover:text-red-300 border border-gray-700 transition" title="ブラウザに保存されたCSVキャッシュを消去して初期データに戻します">
-                            <i class="fa-solid fa-trash-can mr-0.5"></i>保存CSVクリア
-                        </button>
+                        <span id="dataSourceBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50 font-medium">rider.csv 読込中...</span>
                     </div>
                     <h1 class="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-1.5">
                         仮面ライダー<span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">全部言えるかな？</span>
@@ -161,26 +158,12 @@
                 </div>
             </div>
 
-            <!-- データ連携・音声・ヘルプボタン群 -->
+            <!-- rider.csv 再読込・音声ボタン群 -->
             <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                <!-- CSVファイル読み込みボタン -->
-                <label for="csvFileInput" class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/60 transition shadow-sm" title="作成したCSVファイル（A列:名前, B列:ルビ, C列:初登場作品, D列:画像, E列:分類, F列:タグ）を読み込みます">
-                    <i class="fa-solid fa-file-csv text-emerald-400 text-sm"></i>
-                    <span>CSV読込</span>
-                    <input type="file" id="csvFileInput" accept=".csv,text/csv" class="hidden">
-                </label>
-
-                <!-- CSVテンプレートダウンロード -->
-                <button id="downloadTemplateBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/80 transition shadow-sm" title="A〜F列仕様のサンプルCSVをダウンロードします">
-                    <i class="fa-solid fa-download text-amber-400 text-sm"></i>
-                    <span class="hidden sm:inline">サンプルCSV出力</span>
-                </button>
-
-                <!-- Excel・GitHub使い方ガイド -->
-                <button id="openGuideModalBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 transition shadow-sm">
-                    <i class="fa-solid fa-circle-question text-indigo-400"></i>
-                    <span class="hidden md:inline">CSV仕様・GitHub使い方</span>
-                    <span class="md:hidden">使い方</span>
+                <!-- rider.csv 再読込ボタン -->
+                <button id="reloadCsvBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/80 transition shadow-sm" title="同じ階層にある rider.csv を再読み込みします">
+                    <i id="reloadCsvIcon" class="fa-solid fa-arrows-rotate text-emerald-400 text-xs"></i>
+                    <span>rider.csv 再読込</span>
                 </button>
 
                 <!-- 効果音ON/OFF -->
@@ -232,7 +215,7 @@
                         <input 
                             type="text" 
                             id="riderInput" 
-                            placeholder="ライダー名を入力(読みのみ可)" 
+                            placeholder="ライダー名を入力" 
                             disabled
                             autocomplete="off"
                             class="w-full pl-10 pr-20 py-2.5 sm:py-3 rounded-xl bg-gray-950 border-2 border-gray-700 text-white placeholder-gray-500 text-sm sm:text-base font-bold focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 disabled:opacity-60 disabled:cursor-not-allowed transition shadow-inner"
@@ -427,7 +410,7 @@
         <div id="emptyStateMessage" class="hidden py-16 text-center bg-gray-900/40 rounded-2xl border border-gray-800/80">
             <i class="fa-solid fa-magnifying-glass text-4xl text-gray-600 mb-3"></i>
             <p class="text-gray-300 font-bold text-sm sm:text-base">現在のチェック条件に一致するライダーがありません</p>
-            <p class="text-gray-500 text-xs mt-1">上のチェックボックス（映像化作品のみ／小説／舞台／ゲーム）や分類タブを変更してください</p>
+            <p class="text-gray-500 text-xs mt-1">上のチェックボックス（映像化作品のみ／小説／舞台／ゲーム）や分類タブを変更してみてください</p>
         </div>
     </main>
 
@@ -438,12 +421,12 @@
                 <span class="font-bold text-gray-400">仮面ライダー全部言えるかな？ゲーム</span> — 6列CSVフォーマット（A:名前 / B:ルビ / C:初登場作品 / D:画像スルー / E:分類 / F:タグ）対応
             </div>
             <div class="flex items-center gap-4">
-                <span>同階層の <code class="text-amber-400 bg-gray-900 px-1.5 py-0.5 rounded">riders.csv</code> 自動読込＆ブラウザ保存対応</span>
+                <span><code class="text-emerald-400 bg-gray-900 px-1.5 py-0.5 rounded">index.html</code> と同じ階層の <code class="text-amber-400 bg-gray-900 px-1.5 py-0.5 rounded">rider.csv</code> を自動読込</span>
             </div>
         </div>
     </footer>
 
-    <!-- ==================== モーダル1：完全制覇（クリア）モーダル ==================== -->
+    <!-- ==================== モーダル：完全制覇（クリア）モーダル ==================== -->
     <div id="clearModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div class="relative w-full max-w-md rounded-2xl bg-gradient-to-b from-gray-900 to-gray-950 border-2 border-amber-500/70 p-6 text-center shadow-[0_0_50px_rgba(245,158,11,0.35)]">
             <button id="closeClearModalBtn" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center">
@@ -482,118 +465,11 @@
         </div>
     </div>
 
-    <!-- ==================== モーダル2：CSVフォーマット・GitHub連携ガイド ==================== -->
-    <div id="guideModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl bg-gray-900 border border-gray-700 shadow-2xl overflow-hidden">
-            <!-- モーダルヘッダー -->
-            <div class="px-6 py-4 bg-gray-950 border-b border-gray-800 flex items-center justify-between">
-                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                    <i class="fa-solid fa-file-csv text-emerald-400"></i>
-                    <span>6列CSVフォーマット仕様 ＆ GitHub公開ガイド</span>
-                </h3>
-                <button id="closeGuideModalBtn" class="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white flex items-center justify-center">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- モーダル本文 -->
-            <div class="p-6 overflow-y-auto space-y-5 text-xs sm:text-sm text-gray-300 leading-relaxed">
-                <div class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-700/50 text-emerald-200">
-                    <div class="font-bold text-emerald-400 mb-1"><i class="fa-solid fa-circle-check mr-1"></i>ご指定の6列CSVフォーマット（2行目からデータ開始）に対応しています！</div>
-                    1行目は見出し行として自動的にスキップされ、2行目以降のデータが読み込まれます。Excelで保存したShift-JIS形式・UTF-8形式のどちらでも文字化けせず読み込めます。
-                </div>
-
-                <!-- 列仕様 -->
-                <div class="space-y-2">
-                    <h4 class="font-black text-white text-sm sm:text-base flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-full bg-rider-red text-white text-xs flex items-center justify-center font-mono">1</span>
-                        CSVの列構成（A列〜F列）
-                    </h4>
-                    <div class="overflow-x-auto border border-gray-800 rounded-lg">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-gray-950 text-gray-400 border-b border-gray-800">
-                                    <th class="p-2">A列: 名前</th>
-                                    <th class="p-2">B列: ルビ</th>
-                                    <th class="p-2">C列: 初登場作品</th>
-                                    <th class="p-2">D列: 画像</th>
-                                    <th class="p-2">E列: 分類</th>
-                                    <th class="p-2">F列: タグ</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-800 bg-gray-900/50 font-mono text-[11px]">
-                                <tr class="text-gray-500 bg-gray-950/40">
-                                    <td class="p-2">名前 (1行目見出し)</td>
-                                    <td class="p-2">ルビ</td>
-                                    <td class="p-2">初登場作品</td>
-                                    <td class="p-2">画像</td>
-                                    <td class="p-2">分類</td>
-                                    <td class="p-2">タグ</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 text-white font-sans font-bold">仮面ライダー1号</td>
-                                    <td class="p-2 text-amber-300">かめんらいだーいちごう</td>
-                                    <td class="p-2 text-sky-300">仮面ライダー</td>
-                                    <td class="p-2 text-gray-500">（空欄OK）</td>
-                                    <td class="p-2">昭和</td>
-                                    <td class="p-2 text-gray-500">（空欄）</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 text-white font-sans font-bold">仮面ライダーシノビ</td>
-                                    <td class="p-2 text-amber-300">かめんらいだーしのび</td>
-                                    <td class="p-2 text-sky-300">仮面ライダージオウ</td>
-                                    <td class="p-2 text-gray-500">（空欄OK）</td>
-                                    <td class="p-2">平成2期</td>
-                                    <td class="p-2 text-gray-500">（空欄）</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 text-white font-sans font-bold">仮面ライダーシック</td>
-                                    <td class="p-2 text-amber-300">かめんらいだーしっく</td>
-                                    <td class="p-2 text-sky-300">小説 仮面ライダーW</td>
-                                    <td class="p-2 text-gray-500">（空欄OK）</td>
-                                    <td class="p-2">平成2期</td>
-                                    <td class="p-2 text-amber-400 font-bold">小説</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <ul class="list-disc list-inside text-xs text-gray-400 space-y-1 pl-1">
-                        <li><strong>A列（名前）・B列（ルビ）</strong>：どちらを入力しても正解になります。「仮面ライダー」「かめんらいだー」を省略した入力でも自動一致します。</li>
-                        <li><strong>C列（初登場作品）</strong>：「シリーズソート」にチェックを入れると、このC列の作品ごとにグループ分けして表示されます。</li>
-                        <li><strong>D列（画像）</strong>：現在はスルーされ、正解時の画像枠エリアには<strong>A列の「名前」だけが大きくスタイリッシュに表示</strong>されます。</li>
-                        <li><strong>E列（分類）</strong>：`昭和`、`平成1期`、`平成2期`、`令和` などのタブで絞り込みができます。</li>
-                        <li><strong>F列（その他のタグ）</strong>：空欄なら「映像化作品」、`小説`・`舞台`・`ゲーム` と書かれていればそれぞれの限定ライダーチェックボックスに対応します。</li>
-                    </ul>
-                </div>
-
-                <!-- 方法2 -->
-                <div class="space-y-2">
-                    <h4 class="font-black text-white text-sm sm:text-base flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-full bg-rider-red text-white text-xs flex items-center justify-center font-mono">2</span>
-                        GitHubへのアップロード方法 ＆ 画面からの直接読込
-                    </h4>
-                    <p class="text-gray-400">GitHubのリポジトリに <code>index.html</code> と同じ階層へ <code>riders.csv</code> というファイル名でアップロードすると、ページを開いた時に自動で読み込まれます。また、画面右上の「<strong>CSV読込</strong>」ボタンから読み込んだデータはお使いのブラウザに自動保存されます。</p>
-                </div>
-            </div>
-
-            <!-- モーダルフッター -->
-            <div class="px-6 py-3 bg-gray-950 border-t border-gray-800 flex justify-end gap-2">
-                <button id="guideDownloadCsvBtn" class="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-download"></i>
-                    <span>サンプルCSVをダウンロード</span>
-                </button>
-                <button id="closeGuideModalFooterBtn" class="px-4 py-2 rounded-lg text-xs font-bold bg-gray-800 hover:bg-gray-700 text-gray-200 transition">
-                    閉じる
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- ==================== アプリケーションスクリプト ==================== -->
     <script>
         /**
          * 初期サンプルデータ（6列仕様: A:名前, B:ルビ, C:初登場作品, D:画像(スルー), E:分類, F:タグ）
-         * 外部の riders.csv がない場合や初回アクセス時に動作確認できるサンプルデータです。
+         * 外部の rider.csv が見つからない場合（プレビュー環境など）に動作確認できるデモデータです。
          * 映像化作品（昭和〜令和）に加え、小説・舞台・ゲーム限定ライダーのサンプルも含めています。
          */
         const DEFAULT_RIDERS_DATA = [
@@ -682,8 +558,6 @@
             { name: "仮面ライダーダークネクロムP", ruby: "かめんらいだーだーくねくろむぴんく", work: "仮面ライダーバトル ガンバライジング", image: "", era: "平成2期", tag: "ゲーム" },
             { name: "仮面ライダーファイズ アクセルフォーム（ゲーム版）", ruby: "かめんらいだーふぁいずあくせるふぉーむ", work: "仮面ライダー正義の系譜", image: "", era: "平成1期", tag: "ゲーム" }
         ];
-
-        const LOCAL_STORAGE_CSV_KEY = 'kamen_rider_quiz_custom_csv_v2';
 
         // ==================== アプリケーション状態管理 ====================
         let riders = [];                  // 読み込まれた全ライダーリスト
@@ -965,7 +839,7 @@
         }
 
         // ==================== ライダーデータの初期化・セット ====================
-        function initializeRidersData(rawList, sourceLabel, isCustomSaved = false) {
+        function initializeRidersData(rawList, sourceLabel, isExternalCsv = false) {
             riders = rawList.map((r, index) => {
                 const riderObj = {
                     index: index,
@@ -985,13 +859,12 @@
             });
 
             const badge = document.getElementById('dataSourceBadge');
-            badge.textContent = `${sourceLabel} (全${riders.length}人)`;
-
-            const clearBtn = document.getElementById('clearSavedCsvBtn');
-            if (isCustomSaved) {
-                clearBtn.classList.remove('hidden');
+            if (isExternalCsv) {
+                badge.className = 'text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50 font-bold';
+                badge.textContent = `${sourceLabel} 読込完了 (全${riders.length}人)`;
             } else {
-                clearBtn.classList.add('hidden');
+                badge.className = 'text-[10px] px-2 py-0.5 rounded bg-amber-950/90 text-amber-300 border border-amber-700/60 font-medium';
+                badge.textContent = `デモデータ表示中（同階層に rider.csv を置くと自動読込）`;
             }
 
             // 現在の分類フィルタが存在しない値になっていたらALLに戻す
@@ -1072,42 +945,38 @@
             }
         }
 
-        // ==================== 起動時のCSV自動読込（localStorage / ./riders.csv） ====================
+        // ==================== 同階層の ./rider.csv 自動読込 ====================
         async function loadInitialCsvData() {
-            // 1. まずブラウザに保存されたCSVがあれば優先読み込み
-            try {
-                const savedCsv = localStorage.getItem(LOCAL_STORAGE_CSV_KEY);
-                if (savedCsv) {
-                    const parsed = parseCSVText(savedCsv);
-                    if (parsed.length > 0) {
-                        initializeRidersData(parsed, '保存CSVデータ', true);
-                        showFeedback(`前回読み込んだCSVデータ（${parsed.length}人）を復元しました！`, 'success');
-                        return;
+            const reloadIcon = document.getElementById('reloadCsvIcon');
+            if (reloadIcon) reloadIcon.classList.add('animate-spin');
+
+            // 同階層の ./rider.csv を最優先で読み込み（万が一 ./riders.csv という名前の場合もフォールバック試行）
+            const candidateFiles = ['./rider.csv', './riders.csv'];
+
+            for (const filePath of candidateFiles) {
+                try {
+                    const response = await fetch(filePath, { cache: 'no-cache' });
+                    if (response.ok) {
+                        const buffer = await response.arrayBuffer();
+                        const text = decodeArrayBufferAuto(buffer);
+                        const parsed = parseCSVText(text);
+                        if (parsed.length > 0) {
+                            const fileName = filePath.replace('./', '');
+                            initializeRidersData(parsed, fileName, true);
+                            showFeedback(`同じ階層の「${fileName}」（2行目以降・計${parsed.length}人）を自動読み込みしました！`, 'success');
+                            if (reloadIcon) reloadIcon.classList.remove('animate-spin');
+                            return;
+                        }
                     }
+                } catch (err) {
+                    // fetch失敗時は次の候補またはデモデータへ
                 }
-            } catch (e) {
-                // localStorageエラー時は無視
             }
 
-            // 2. 同階層の ./riders.csv をfetch試行（GitHub Pages用）
-            try {
-                const response = await fetch('./riders.csv', { cache: 'no-store' });
-                if (response.ok) {
-                    const buffer = await response.arrayBuffer();
-                    const text = decodeArrayBufferAuto(buffer);
-                    const parsed = parseCSVText(text);
-                    if (parsed.length > 0) {
-                        initializeRidersData(parsed, 'riders.csv', false);
-                        showFeedback(`サーバー上の「riders.csv」（${parsed.length}人）を自動読み込みしました！`, 'success');
-                        return;
-                    }
-                }
-            } catch (err) {
-                // riders.csvが無い場合は内蔵サンプルデータへ
-            }
-
-            // 3. 内蔵サンプルデータを使用
-            initializeRidersData(DEFAULT_RIDERS_DATA, 'サンプルデータ', false);
+            // 同階層に rider.csv が見つからない場合（プレビュー画面など）はデモデータを使用
+            initializeRidersData(DEFAULT_RIDERS_DATA, 'デモデータ', false);
+            showFeedback('同階層の rider.csv が見つからないためデモデータを表示中（GitHubに index.html と rider.csv を一緒に置くと自動で読み込まれます）', 'info');
+            if (reloadIcon) reloadIcon.classList.remove('animate-spin');
         }
 
         function decodeArrayBufferAuto(buffer) {
@@ -1674,35 +1543,19 @@
             }
         }
 
-        // ==================== 6列仕様CSVテンプレート（BOM付きUTF-8）ダウンロード ====================
-        function downloadCsvTemplate() {
-            const header = ['名前', 'ルビ', '初登場作品', '画像', '分類', 'タグ'];
-            const rows = riders.map(r => [
-                `"${(r.name || '').replace(/"/g, '""')}"`,
-                `"${(r.ruby || '').replace(/"/g, '""')}"`,
-                `"${(r.work || '').replace(/"/g, '""')}"`,
-                `"${(r.image || '').replace(/"/g, '""')}"`,
-                `"${(r.era || '').replace(/"/g, '""')}"`,
-                `"${(r.tag || '').replace(/"/g, '""')}"`
-            ]);
-
-            const csvContent = '\uFEFF' + [header.join(','), ...rows.map(r => r.join(','))].join('\r\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'riders.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
         // ==================== イベントリスナー登録 ====================
         window.addEventListener('DOMContentLoaded', () => {
-            // 1. 初期CSVデータのロード
+            // 1. 同階層の rider.csv 自動ロード
             loadInitialCsvData();
+
+            // rider.csv 再読込ボタン
+            document.getElementById('reloadCsvBtn').addEventListener('click', () => {
+                if (gameStatus === 'PLAYING') {
+                    showFeedback('プレイ中は再読込できません。リセット後に実行してください。', 'warn');
+                    return;
+                }
+                loadInitialCsvData();
+            });
 
             // 2. ゲーム開始・ギブアップ・リセット
             document.getElementById('startBtn').addEventListener('click', startGame);
@@ -1826,53 +1679,14 @@
                 });
             });
 
-            // 8. ローカルCSVファイル選択読み込み（＆ブラウザ保存）
-            document.getElementById('csvFileInput').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const buffer = event.target.result;
-                    const text = decodeArrayBufferAuto(buffer);
-                    const parsed = parseCSVText(text);
-                    if (parsed.length > 0) {
-                        try {
-                            localStorage.setItem(LOCAL_STORAGE_CSV_KEY, text);
-                        } catch (err) {
-                            // 容量超過時などはスキップ
-                        }
-                        initializeRidersData(parsed, file.name, true);
-                        showFeedback(`CSV「${file.name}」（2行目以降・計${parsed.length}人）を読み込みました！`, 'success');
-                    } else {
-                        showFeedback('CSVからライダーデータを読み込めませんでした（A列に名前が入っているか確認してください）', 'error');
-                    }
-                    e.target.value = '';
-                };
-                reader.readAsArrayBuffer(file);
-            });
-
-            // 保存されたCSVキャッシュを消去して初期状態に戻すボタン
-            document.getElementById('clearSavedCsvBtn').addEventListener('click', () => {
-                try {
-                    localStorage.removeItem(LOCAL_STORAGE_CSV_KEY);
-                } catch (e) {}
-                initializeRidersData(DEFAULT_RIDERS_DATA, 'サンプルデータ', false);
-                showFeedback('保存されたCSVデータを消去し、初期サンプルデータに戻しました', 'info');
-            });
-
-            // 9. CSVテンプレート出力
-            document.getElementById('downloadTemplateBtn').addEventListener('click', downloadCsvTemplate);
-            document.getElementById('guideDownloadCsvBtn').addEventListener('click', downloadCsvTemplate);
-
-            // 10. 音声ON/OFF切り替え
+            // 8. 音声ON/OFF切り替え
             document.getElementById('soundToggleBtn').addEventListener('click', () => {
                 soundEnabled = !soundEnabled;
                 const icon = document.getElementById('soundIcon');
                 icon.className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark text-gray-500';
             });
 
-            // 11. クリアモーダル操作＆結果コピー
+            // 9. クリアモーダル操作＆結果コピー
             const clearModal = document.getElementById('clearModal');
             document.getElementById('closeClearModalBtn').addEventListener('click', () => {
                 clearModal.classList.add('hidden');
@@ -1902,20 +1716,6 @@
                     copyBtn.innerHTML = originalHtml;
                 }, 2000);
             });
-
-            // 12. 使い方ガイドモーダル開閉
-            const guideModal = document.getElementById('guideModal');
-            const openGuide = () => {
-                guideModal.classList.remove('hidden');
-                guideModal.classList.add('flex');
-            };
-            const closeGuide = () => {
-                guideModal.classList.add('hidden');
-                guideModal.classList.remove('flex');
-            };
-            document.getElementById('openGuideModalBtn').addEventListener('click', openGuide);
-            document.getElementById('closeGuideModalBtn').addEventListener('click', closeGuide);
-            document.getElementById('closeGuideModalFooterBtn').addEventListener('click', closeGuide);
         });
     </script>
 </body>
