@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="ja" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -731,9 +731,18 @@
             const t = String(tagStr || '').trim();
             const isNovel = t.includes('小説');
             const isStage = t.includes('舞台');
+            const isMovie = t.includes('映画');
             const isGame = t.includes('ゲーム');
             const isVisual = !isNovel && !isStage && !isGame;
-            return { isNovel, isStage, isGame, isVisual, rawTag: t };
+
+            // カード右上に表示するタグは「小説」「舞台」「映画」「ゲーム」の4種類のみに限定
+            const displayTags = [];
+            if (isNovel) displayTags.push('小説');
+            if (isStage) displayTags.push('舞台');
+            if (isMovie) displayTags.push('映画');
+            if (isGame) displayTags.push('ゲーム');
+
+            return { isNovel, isStage, isMovie, isGame, isVisual, rawTag: t, displayTags };
         }
 
         /**
@@ -994,13 +1003,16 @@
 
             const isOpened = rider.answered || rider.gaveUp;
 
-            // タグバッジ（小説 / 舞台 / ゲーム）
+            // タグバッジ（小説 / 舞台 / 映画 / ゲーム のみ表示し、父親・女性ライダー等は表示しない）
             let tagBadgeHtml = '';
-            if (rider.tagInfo.rawTag) {
-                let tagColorClass = 'bg-amber-950/90 text-amber-300 border-amber-600/50';
-                if (rider.tagInfo.isStage) tagColorClass = 'bg-purple-950/90 text-purple-300 border-purple-600/50';
-                if (rider.tagInfo.isGame) tagColorClass = 'bg-pink-950/90 text-pink-300 border-pink-600/50';
-                tagBadgeHtml = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${tagColorClass}">${escapeHtml(rider.tagInfo.rawTag)}</span>`;
+            if (rider.tagInfo.displayTags && rider.tagInfo.displayTags.length > 0) {
+                tagBadgeHtml = rider.tagInfo.displayTags.map(tagName => {
+                    let tagColorClass = 'bg-amber-950/90 text-amber-300 border-amber-600/50';
+                    if (tagName === '舞台') tagColorClass = 'bg-purple-950/90 text-purple-300 border-purple-600/50';
+                    if (tagName === '映画') tagColorClass = 'bg-sky-950/90 text-sky-300 border-sky-600/50';
+                    if (tagName === 'ゲーム') tagColorClass = 'bg-pink-950/90 text-pink-300 border-pink-600/50';
+                    return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${tagColorClass}">${escapeHtml(tagName)}</span>`;
+                }).join('');
             }
 
             if (isOpened) {
@@ -1080,7 +1092,9 @@
                             <span class="px-1.5 py-0.5 rounded bg-gray-950/90 text-[10px] font-mono font-bold text-gray-500 border border-gray-800">
                                 No.${rider.id}
                             </span>
-                            ${tagBadgeHtml}
+                            <div class="flex items-center gap-1">
+                                ${tagBadgeHtml}
+                            </div>
                         </div>
                         <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gray-950 border border-gray-800 flex items-center justify-center shadow-inner">
                             <span class="font-mono text-sm sm:text-base font-black text-gray-600">???</span>
