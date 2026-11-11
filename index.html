@@ -153,7 +153,7 @@
                         <span id="dataSourceBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50 font-medium">rider.csv 読込中...</span>
                     </div>
                     <h1 class="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-1.5">
-                        仮面ライダー<span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">全部言えるかな？</span>
+                        仮面ライダー<span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">言えるかな？</span>
                     </h1>
                 </div>
             </div>
@@ -410,7 +410,7 @@
         <div id="emptyStateMessage" class="hidden py-16 text-center bg-gray-900/40 rounded-2xl border border-gray-800/80">
             <i class="fa-solid fa-magnifying-glass text-4xl text-gray-600 mb-3"></i>
             <p class="text-gray-300 font-bold text-sm sm:text-base">現在のチェック条件に一致するライダーがありません</p>
-            <p class="text-gray-500 text-xs mt-1">上のチェックボックス（映像化作品のみ／小説／舞台／ゲーム）や分類タブを変更してみてください</p>
+            <p class="text-gray-500 text-xs mt-1">上のチェックボックス（映像化作品のみ／小説／舞台／ゲーム）や分類タブを変更してください</p>
         </div>
     </main>
 
@@ -418,10 +418,9 @@
     <footer class="border-t border-gray-800/80 bg-gray-950/80 py-4 mt-8 text-center text-xs text-gray-500">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <div>
-                <span class="font-bold text-gray-400">仮面ライダー全部言えるかな？ゲーム</span> — 6列CSVフォーマット（A:名前 / B:ルビ / C:初登場作品 / D:画像スルー / E:分類 / F:タグ）対応
+                <span class="font-bold text-gray-400">仮面ライダー言えるかな？</span>
             </div>
             <div class="flex items-center gap-4">
-                <span><code class="text-emerald-400 bg-gray-900 px-1.5 py-0.5 rounded">index.html</code> と同じ階層の <code class="text-amber-400 bg-gray-900 px-1.5 py-0.5 rounded">rider.csv</code> を自動読込</span>
             </div>
         </div>
     </footer>
@@ -439,7 +438,7 @@
 
             <div class="text-xs font-mono font-black tracking-widest uppercase text-amber-400 mb-1">COMPLETE!! CONGRATULATIONS</div>
             <h2 class="text-2xl sm:text-3xl font-black text-white mb-2">全ライダー解放達成！</h2>
-            <p id="modalClearConditionText" class="text-xs sm:text-sm text-gray-300 mb-5">見事、出題対象のすべての仮面ライダーを言い当てました！</p>
+            <p id="modalClearConditionText" class="text-xs sm:text-sm text-gray-300 mb-5">出題対象のすべての仮面ライダーを言い当てました！</p>
 
             <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 mb-5 grid grid-cols-2 gap-3">
                 <div>
@@ -556,7 +555,7 @@
             { name: "仮面ライダーアークゼロワン", ruby: "かめんらいだーあーくぜろわん", work: "舞台 仮面ライダーゼロワン", image: "", era: "令和", tag: "舞台" },
             { name: "仮面ライダーガニコウモル", ruby: "かめんらいだーがにこうもる", work: "仮面ライダー バトライド・ウォー", image: "", era: "昭和", tag: "ゲーム" },
             { name: "仮面ライダーダークネクロムP", ruby: "かめんらいだーだーくねくろむぴんく", work: "仮面ライダーバトル ガンバライジング", image: "", era: "平成2期", tag: "ゲーム" },
-            { name: "仮面ライダーファイズ アクセルフォーム（ゲーム版）", ruby: "かめんらいだーふぁいずあくせるふぉーむ", work: "仮面ライダー正義の系譜", image: "", era: "平成1期", tag: "ゲーム" }
+            { name: "仮面ライダーダークディケイド", ruby: "かめんらいだーだーくでぃけいど", work: "仮面ライダー正義の系譜", image: "", era: "平成1期", tag: "ゲーム" }
         ];
 
         // ==================== アプリケーション状態管理 ====================
