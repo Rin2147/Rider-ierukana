@@ -1,8 +1,8 @@
-
+<!DOCTYPE html>
 <html lang="ja" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>仮面ライダー言えるかな？ | KAMEN RIDER QUIZ</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,6 +47,7 @@
             background-attachment: fixed;
             color: #f3f4f6;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* ヒーロー風の斜めストライプ背景装飾 */
@@ -118,6 +119,14 @@
             animation: shakeInput 0.35s ease-in-out;
         }
 
+        /* 2行省略表示用 */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         /* スクロールバーのカスタマイズ */
         ::-webkit-scrollbar {
             width: 8px;
@@ -137,48 +146,47 @@
 </head>
 <body class="min-h-screen flex flex-col font-sans selection:bg-rider-red selection:text-white">
 
-    <!-- ==================== トップヘッダー（スマホでも圧迫しないコンパクト設計） ==================== -->
+    <!-- ==================== トップヘッダー ==================== -->
     <header class="border-b border-rider-border bg-rider-dark/95 backdrop-blur-md sticky top-0 z-40 shadow-2xl">
-        <!-- 上段：タイトル＆音声ボタン -->
+        <!-- 上段：タイトル＆ツールバー -->
         <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-2 border-b border-gray-800/80">
-            <div class="flex items-center gap-2.5 min-w-0">
-                <h1 class="text-base sm:text-xl font-black tracking-tight text-white truncate flex items-center gap-1.5">
-                    <span>仮面ライダー</span><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">言えるかな？</span>
+            <div>
+                <h1 class="text-base sm:text-xl font-black tracking-tight text-white flex items-center gap-1.5">
+                    仮面ライダー<span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">言えるかな？</span>
                 </h1>
-                <span class="hidden sm:inline-block text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded bg-rider-red/20 text-red-400 border border-red-500/30 font-bold shrink-0">KAMEN RIDER QUIZ</span>
             </div>
 
-            <!-- 音声ボタン＆スマホ用サイズ切替 -->
-            <div class="flex items-center gap-1.5 shrink-0">
-                <!-- カードサイズ切替（スマホ・PC共通） -->
+            <!-- 右側ツールボタン群（カードサイズ切替＆効果音ON/OFF） -->
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <!-- カードサイズ切替（スマホでも利用可能） -->
                 <div class="flex items-center bg-gray-900 p-0.5 rounded-lg border border-gray-800">
-                    <button data-size="sm" class="size-btn px-2 py-1 rounded text-[11px] text-gray-400 hover:text-white transition" title="コンパクト表示">
+                    <button data-size="sm" class="size-btn px-2 py-1 rounded text-xs text-gray-400 hover:text-white transition" title="コンパクト表示">
                         <i class="fa-solid fa-table-cells"></i>
                     </button>
-                    <button data-size="md" class="size-btn px-2 py-1 rounded text-[11px] bg-gray-700 text-white transition" title="標準サイズ">
+                    <button data-size="md" class="size-btn px-2 py-1 rounded text-xs bg-gray-700 text-white transition" title="標準サイズ">
                         <i class="fa-solid fa-table-cells-large"></i>
                     </button>
-                    <button data-size="lg" class="size-btn px-2 py-1 rounded text-[11px] text-gray-400 hover:text-white transition" title="大きめ表示">
+                    <button data-size="lg" class="size-btn px-2 py-1 rounded text-xs text-gray-400 hover:text-white transition" title="大きめ表示">
                         <i class="fa-solid fa-square"></i>
                     </button>
                 </div>
 
                 <!-- 効果音ON/OFF -->
-                <button id="soundToggleBtn" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-600/80 transition" title="効果音 ON/OFF">
+                <button id="soundToggleBtn" class="p-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-600/80 transition" title="効果音 ON/OFF">
                     <i id="soundIcon" class="fa-solid fa-volume-high"></i>
                 </button>
             </div>
         </div>
 
         <!-- 下段：ゲーム操作・タイマー・入力バー -->
-        <div class="max-w-7xl mx-auto px-2.5 sm:px-6 py-2 sm:py-3 hero-stripes">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 items-center">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 hero-stripes">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 sm:gap-3 items-center">
                 
-                <!-- 左：タイマー＆進捗ステータス (スマホでは1行にコンパクト集約) -->
+                <!-- 左：タイマー＆進捗ステータス (4 cols) -->
                 <div class="lg:col-span-4 flex items-center justify-between gap-2.5 bg-gray-950/90 border border-gray-800 px-3 py-1.5 sm:py-2 rounded-xl shadow-inner">
                     <!-- タイマー表示 -->
-                    <div class="flex items-center gap-2 shrink-0">
-                        <div id="timerIndicator" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gray-600 transition-colors duration-300"></div>
+                    <div class="flex items-center gap-2">
+                        <div id="timerIndicator" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gray-600 transition-colors duration-300 shrink-0"></div>
                         <div>
                             <div class="text-[9px] sm:text-[10px] text-gray-400 font-bold tracking-wider uppercase leading-none">TIME</div>
                             <div id="timerDisplay" class="font-mono text-xl sm:text-3xl font-black text-white tracking-wider leading-tight">
@@ -190,11 +198,11 @@
                     <div class="h-7 w-px bg-gray-800 shrink-0"></div>
 
                     <!-- スコア・進捗表示 -->
-                    <div class="flex-1 min-w-[90px]">
-                        <div class="flex justify-between items-baseline mb-0.5">
+                    <div class="flex-1 min-w-[105px]">
+                        <div class="flex justify-between items-baseline mb-1">
                             <span class="text-[10px] sm:text-[11px] text-gray-400 font-bold">解放数</span>
                             <span class="font-mono text-xs sm:text-base font-black text-amber-400">
-                                <span id="correctCount" class="text-white text-sm sm:text-lg">0</span> / <span id="totalCount">0</span>
+                                <span id="correctCount" class="text-white text-base sm:text-lg">0</span> / <span id="totalCount">0</span>
                             </span>
                         </div>
                         <div class="w-full h-1.5 sm:h-2 bg-gray-800 rounded-full overflow-hidden p-0.5 border border-gray-700">
@@ -203,20 +211,22 @@
                     </div>
                 </div>
 
-                <!-- 中央：ライダー名入力ボックス (text-baseでスマホの自動ズームを防止) -->
+                <!-- 中央：ライダー名入力ボックス (5 cols) -->
                 <div class="lg:col-span-5 relative">
                     <div class="relative flex items-center">
-                        <div class="absolute left-3 text-gray-400 pointer-events-none">
-                            <i class="fa-solid fa-bolt text-amber-400 text-sm"></i>
+                        <div class="absolute left-3.5 text-gray-400 pointer-events-none">
+                            <i class="fa-solid fa-bolt text-amber-400"></i>
                         </div>
+                        <!-- text-base (16px) でスマホブラウザの入力時自動ズームを防止 -->
                         <input 
                             type="text" 
                             id="riderInput" 
-                            placeholder="ライダー名を入力..." 
+                            placeholder="ライダー名を入力（省略OK）" 
                             disabled
                             autocomplete="off"
+                            autocorrect="off"
                             autocapitalize="off"
-                            enterkeyhint="send"
+                            enterkeyhint="done"
                             class="w-full pl-9 pr-16 py-2 sm:py-2.5 rounded-xl bg-gray-950 border-2 border-gray-700 text-white placeholder-gray-500 text-base font-bold focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 disabled:opacity-60 disabled:cursor-not-allowed transition shadow-inner"
                         >
                         <button 
@@ -229,40 +239,39 @@
                     </div>
 
                     <!-- フィードバックメッセージ＆自動判定オプション -->
-                    <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-1 px-0.5">
-                        <div id="feedbackMessage" class="text-[11px] sm:text-xs font-bold text-gray-400 truncate max-w-full min-h-[16px] flex items-center gap-1">
-                            <i class="fa-solid fa-circle-info text-amber-400 shrink-0"></i>
-                            <span class="truncate">ひらがな・カタカナ対応！「仮面ライダー」省略OK</span>
+                    <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mt-1 px-1">
+                        <div id="feedbackMessage" class="text-[11px] sm:text-xs font-bold text-gray-400 truncate max-w-full sm:max-w-[62%] min-h-[16px] flex items-center gap-1">
+                            <span><i class="fa-solid fa-circle-info text-amber-400 mr-1"></i>「仮面ライダー」は省略して入力できます</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-[11px] sm:text-xs text-gray-300 shrink-0 ml-auto">
-                            <label class="inline-flex items-center gap-1 cursor-pointer select-none">
-                                <input type="checkbox" id="autoSubmitToggle" checked class="w-3.5 h-3.5 rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
+                            <label class="inline-flex items-center gap-1 cursor-pointer select-none" title="入力中に一致したらEnter不要で即座に正解判定します">
+                                <input type="checkbox" id="autoSubmitToggle" checked class="rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
                                 <span>自動判定</span>
                             </label>
-                            <label class="inline-flex items-center gap-1 cursor-pointer select-none">
-                                <input type="checkbox" id="autoScrollToggle" class="w-3.5 h-3.5 rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
+                            <label class="inline-flex items-center gap-1 cursor-pointer select-none" title="正解したライダーのマスへ自動でスクロールします">
+                                <input type="checkbox" id="autoScrollToggle" class="rounded bg-gray-800 border-gray-600 text-rider-red focus:ring-0 accent-red-600">
                                 <span>自動スクロール</span>
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- 右：スタート / ギブアップ / リセットボタン -->
-                <div class="lg:col-span-3 flex items-center justify-end gap-1.5 sm:gap-2">
+                <!-- 右：スタート / ギブアップ / リセットボタン (3 cols) -->
+                <div class="lg:col-span-3 flex items-center justify-end gap-2">
                     <!-- スタートボタン -->
-                    <button id="startBtn" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-base text-white bg-gradient-to-r from-rider-red via-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 shadow-lg shadow-red-900/50 border border-red-400/40 transform active:scale-95 transition">
+                    <button id="startBtn" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-sm text-white bg-gradient-to-r from-rider-red via-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 shadow-lg shadow-red-900/50 border border-red-400/40 transform active:scale-95 transition">
                         <i class="fa-solid fa-play"></i>
                         <span>スタート！</span>
                     </button>
 
                     <!-- ギブアップボタン -->
-                    <button id="giveUpBtn" disabled class="inline-flex items-center justify-center gap-1 px-3 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-amber-300 bg-amber-950/60 hover:bg-amber-900/70 border border-amber-700/60 disabled:opacity-40 disabled:pointer-events-none transition" title="タイマーを止めて未回答のライダーをすべて表示します">
+                    <button id="giveUpBtn" disabled class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-amber-300 bg-amber-950/60 hover:bg-amber-900/70 border border-amber-700/60 disabled:opacity-40 disabled:pointer-events-none transition" title="タイマーを止めて未回答のライダーをすべて表示します">
                         <i class="fa-solid fa-flag"></i>
                         <span>ギブアップ</span>
                     </button>
 
                     <!-- リセットボタン -->
-                    <button id="resetBtn" class="inline-flex items-center justify-center gap-1 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-gray-300 bg-gray-800 hover:bg-gray-700 border border-gray-700 transition" title="最初からやり直す">
+                    <button id="resetBtn" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-gray-300 bg-gray-800 hover:bg-gray-700 border border-gray-700 transition" title="最初からやり直す">
                         <i class="fa-solid fa-rotate-right"></i>
                         <span class="hidden xl:inline">リセット</span>
                     </button>
@@ -273,14 +282,14 @@
     </header>
 
     <!-- ==================== 出題条件＆ソート設定パネル ==================== -->
-    <section class="max-w-7xl w-full mx-auto px-2.5 sm:px-6 pt-3 pb-1.5 space-y-2">
+    <section class="max-w-7xl w-full mx-auto px-3 sm:px-6 pt-3 pb-1.5 space-y-2.5">
         <!-- メインチェックボックス群 -->
         <div class="p-2.5 sm:p-3.5 rounded-2xl bg-gray-900/90 border border-gray-800 shadow-lg flex flex-col gap-2.5">
             <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
                     <span class="px-2 py-0.5 rounded bg-rider-red/20 border border-rider-red/40 text-red-400 text-[10px] sm:text-[11px] font-black tracking-wider">出題＆表示オプション</span>
                     <span id="filterLockNotice" class="hidden text-[10px] sm:text-[11px] text-amber-400 font-bold">
-                        <i class="fa-solid fa-lock mr-1"></i>プレイ中は出題範囲をロック中
+                        <i class="fa-solid fa-lock mr-1"></i>プレイ中は出題範囲の変更をロック中（シリーズソートは切替可）
                     </span>
                 </div>
                 <div class="text-[11px] sm:text-xs text-gray-400 font-medium">
@@ -288,10 +297,10 @@
                 </div>
             </div>
 
-            <!-- チェックボックス5つを並べるメイン行（スマホでは押しやすい2列グリッド、タブレット以上で横並び） -->
+            <!-- チェックボックス5つを並べるメイン行（スマホでは押しやすいグリッド配置） -->
             <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5 sm:gap-2.5">
                 <!-- 1. シリーズソート -->
-                <label class="col-span-2 sm:col-span-1 cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-2 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-950/40 transition">
+                <label class="col-span-2 sm:col-span-1 cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-2 px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-950/40 transition">
                     <div class="flex items-center gap-1.5">
                         <input type="checkbox" id="chkSeriesSort" class="w-4 h-4 rounded accent-sky-500">
                         <i class="fa-solid fa-layer-group text-sky-400 text-xs"></i>
@@ -303,40 +312,40 @@
                 <div class="h-6 w-px bg-gray-800 hidden sm:block"></div>
 
                 <!-- 2. 映像化作品のみ -->
-                <label id="labelVisualOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-950/40 transition">
+                <label id="labelVisualOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-950/40 transition">
                     <div class="flex items-center gap-1.5 min-w-0">
                         <input type="checkbox" id="chkVisualOnly" checked class="w-4 h-4 rounded accent-emerald-500 shrink-0">
-                        <i class="fa-solid fa-film text-emerald-400 text-xs shrink-0"></i>
+                        <i class="fa-solid fa-film text-emerald-400 text-xs hidden sm:inline"></i>
                         <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">映像化作品のみ</span>
                     </div>
                     <span id="countVisualOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-emerald-300 shrink-0">0</span>
                 </label>
 
                 <!-- 3. 小説限定ライダー -->
-                <label id="labelNovelOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-950/40 transition">
+                <label id="labelNovelOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-950/40 transition">
                     <div class="flex items-center gap-1.5 min-w-0">
                         <input type="checkbox" id="chkNovelOnly" class="w-4 h-4 rounded accent-amber-500 shrink-0">
-                        <i class="fa-solid fa-book text-amber-400 text-xs shrink-0"></i>
+                        <i class="fa-solid fa-book text-amber-400 text-xs hidden sm:inline"></i>
                         <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">小説限定ライダー</span>
                     </div>
                     <span id="countNovelOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-amber-300 shrink-0">0</span>
                 </label>
 
                 <!-- 4. 舞台限定ライダー -->
-                <label id="labelStageOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-purple-500 has-[:checked]:bg-purple-950/40 transition">
+                <label id="labelStageOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-purple-500 has-[:checked]:bg-purple-950/40 transition">
                     <div class="flex items-center gap-1.5 min-w-0">
                         <input type="checkbox" id="chkStageOnly" class="w-4 h-4 rounded accent-purple-500 shrink-0">
-                        <i class="fa-solid fa-masks-theater text-purple-400 text-xs shrink-0"></i>
+                        <i class="fa-solid fa-masks-theater text-purple-400 text-xs hidden sm:inline"></i>
                         <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">舞台限定ライダー</span>
                     </div>
                     <span id="countStageOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-purple-300 shrink-0">0</span>
                 </label>
 
                 <!-- 5. ゲーム限定ライダー -->
-                <label id="labelGameOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-pink-500 has-[:checked]:bg-pink-950/40 transition">
+                <label id="labelGameOnly" class="cursor-pointer select-none inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-gray-950 hover:bg-gray-800/80 border border-gray-700 has-[:checked]:border-pink-500 has-[:checked]:bg-pink-950/40 transition">
                     <div class="flex items-center gap-1.5 min-w-0">
                         <input type="checkbox" id="chkGameOnly" class="w-4 h-4 rounded accent-pink-500 shrink-0">
-                        <i class="fa-solid fa-gamepad text-pink-400 text-xs shrink-0"></i>
+                        <i class="fa-solid fa-gamepad text-pink-400 text-xs hidden sm:inline"></i>
                         <span class="text-xs sm:text-sm font-bold text-gray-100 truncate">ゲーム限定ライダー</span>
                     </div>
                     <span id="countGameOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-pink-300 shrink-0">0</span>
@@ -344,15 +353,22 @@
             </div>
         </div>
 
-        <!-- 下段：分類タブ ＆ 表示フィルター -->
+        <!-- 下段：分類タブ ＆ 作品フィルタ ＆ 表示フィルター -->
         <div class="flex flex-wrap items-center justify-between gap-2">
             <!-- 分類絞り込みタブ -->
             <div class="flex flex-wrap items-center gap-1 sm:gap-1.5" id="eraFilterContainer">
                 <!-- JSで動的に生成（すべて / 昭和 / 平成1期 / 平成2期 / 令和 ...） -->
             </div>
 
-            <!-- 状態フィルター＆ヒント切替 -->
-            <div class="flex items-center gap-1.5 sm:gap-2 ml-auto">
+            <!-- 作品フィルタ＆状態フィルター＆ヒント切替 -->
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto sm:ml-auto justify-end">
+                <!-- 作品（C列：初登場作品）フィルター -->
+                <div class="relative flex-1 sm:flex-initial min-w-[150px] max-w-full sm:max-w-[240px]">
+                    <select id="workFilterSelect" class="w-full bg-gray-900 border border-gray-700 text-gray-200 text-xs font-bold rounded-lg px-2 sm:px-2.5 py-1.5 focus:outline-none focus:border-amber-400 disabled:opacity-50 disabled:cursor-not-allowed truncate">
+                        <option value="ALL">すべての作品</option>
+                    </select>
+                </div>
+
                 <!-- 状態フィルター -->
                 <select id="statusFilterSelect" class="bg-gray-900 border border-gray-700 text-gray-200 text-xs font-bold rounded-lg px-2 sm:px-2.5 py-1.5 focus:outline-none focus:border-amber-400">
                     <option value="ALL">すべて表示</option>
@@ -372,12 +388,12 @@
     <!-- ==================== メイン：ライダーグリッド一覧 ==================== -->
     <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-3 flex-1">
         <!-- 直近で正解したライダーのミニティッカー -->
-        <div id="recentHitBanner" class="hidden mb-3 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-950/60 via-red-950/40 to-gray-900 border border-amber-500/40 flex items-center justify-between">
-            <div class="flex items-center gap-2 text-xs sm:text-sm">
-                <span class="px-2 py-0.5 rounded bg-amber-500 text-black font-black text-[10px] uppercase">OPEN!</span>
-                <span id="recentHitText" class="font-bold text-amber-200"></span>
+        <div id="recentHitBanner" class="hidden mb-3 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-950/60 via-red-950/40 to-gray-900 border border-amber-500/40 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 text-xs sm:text-sm min-w-0">
+                <span class="px-2 py-0.5 rounded bg-amber-500 text-black font-black text-[10px] uppercase shrink-0">OPEN!</span>
+                <span id="recentHitText" class="font-bold text-amber-200 truncate"></span>
             </div>
-            <span id="recentHitSub" class="text-[11px] text-gray-400 font-mono"></span>
+            <span id="recentHitSub" class="text-[11px] text-gray-400 font-mono shrink-0"></span>
         </div>
 
         <!-- シリーズソートON時／OFF時の描画コンテナ -->
@@ -386,10 +402,10 @@
         </div>
 
         <!-- 該当なしメッセージ -->
-        <div id="emptyStateMessage" class="hidden py-16 text-center bg-gray-900/40 rounded-2xl border border-gray-800/80">
+        <div id="emptyStateMessage" class="hidden py-16 text-center bg-gray-900/40 rounded-2xl border border-gray-800/80 px-4">
             <i class="fa-solid fa-magnifying-glass text-4xl text-gray-600 mb-3"></i>
-            <p class="text-gray-300 font-bold text-sm sm:text-base">現在のチェック条件に一致するライダーがありません</p>
-            <p class="text-gray-500 text-xs mt-1">上のチェックボックス（映像化作品のみ／小説／舞台／ゲーム）や分類タブを変更してください</p>
+            <p class="text-gray-300 font-bold text-sm sm:text-base">現在の条件に一致するライダーがありません</p>
+            <p class="text-gray-500 text-xs mt-1">上のチェックボックスや作品・分類フィルターを変更してください</p>
         </div>
     </main>
 
@@ -398,8 +414,6 @@
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <div>
                 <span class="font-bold text-gray-400">仮面ライダー言えるかな？</span>
-            </div>
-            <div class="flex items-center gap-4">
             </div>
         </div>
     </footer>
@@ -431,9 +445,9 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-2.5">
-                <button id="copyResultBtn" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-sm bg-amber-500 hover:bg-amber-400 text-gray-950 transition flex items-center justify-center gap-2 shadow">
-                    <i class="fa-solid fa-share-nodes"></i>
-                    <span>記録をコピー</span>
+                <button id="shareResultBtn" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-sm bg-black hover:bg-gray-900 text-white border border-gray-700 transition flex items-center justify-center gap-2 shadow-lg">
+                    <i class="fa-brands fa-x-twitter text-base"></i>
+                    <span>記録をシェア</span>
                 </button>
                 <button id="playAgainBtn" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-sm bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-rotate-right"></i>
@@ -446,9 +460,8 @@
     <!-- ==================== アプリケーションスクリプト ==================== -->
     <script>
         /**
-         * 初期サンプルデータ（6列仕様: A:名前, B:ルビ, C:初登場作品, D:画像(スルー), E:分類, F:タグ）
-         * 外部の rider.csv が見つからない場合（プレビュー環境など）に動作確認できるデモデータです。
-         * 映像化作品（昭和〜令和）に加え、小説・舞台・ゲーム限定ライダーのサンプルも含めています。
+         * 初期フォールバックデータ
+         * 同階層の rider.csv が読み込めない環境でのみ使用されます
          */
         const DEFAULT_RIDERS_DATA = [
             // 昭和
@@ -465,8 +478,8 @@
             { name: "仮面ライダーBLACK", ruby: "かめんらいだーぶらっく", work: "仮面ライダーBLACK", image: "", era: "昭和", tag: "" },
             { name: "仮面ライダーBLACK RX", ruby: "かめんらいだーぶらっくあーるえっくす", work: "仮面ライダーBLACK RX", image: "", era: "昭和", tag: "" },
             { name: "真・仮面ライダー", ruby: "しんかめんらいだー", work: "真・仮面ライダー 序章", image: "", era: "昭和", tag: "" },
-            { name: "仮面ライダーZO", ruby: "かめんらいだーぜっとおー", work: "仮面ライダーZO", image: "", era: "昭和", tag: "" },
-            { name: "仮面ライダーJ", ruby: "かめんらいだーじぇい", work: "仮面ライダーJ", image: "", era: "昭和", tag: "" },
+            { name: "仮面ライダーZO", ruby: "かめんらいだーぜっとおー", work: "仮面ライダーZO", image: "", era: "昭和", tag: "映画" },
+            { name: "仮面ライダーJ", ruby: "かめんらいだーじぇい", work: "仮面ライダーJ", image: "", era: "昭和", tag: "映画" },
 
             // 平成1期
             { name: "仮面ライダークウガ", ruby: "かめんらいだーくうが", work: "仮面ライダークウガ", image: "", era: "平成1期", tag: "" },
@@ -521,14 +534,14 @@
             { name: "仮面ライダーギーツ", ruby: "かめんらいだーぎーつ", work: "仮面ライダーギーツ", image: "", era: "令和", tag: "" },
             { name: "仮面ライダータイクーン", ruby: "かめんらいだーたいくーん", work: "仮面ライダーギーツ", image: "", era: "令和", tag: "" },
             { name: "仮面ライダーガッチャード", ruby: "かめんらいだーがっちゃーど", work: "仮面ライダーガッチャード", image: "", era: "令和", tag: "" },
-            { name: "仮面ライダーマジェード", ruby: "かめんらいだーまじぇーど", work: "仮面ライダーガッチャード", image: "", era: "令和", tag: "" },
+            { name: "仮面ライダーマジェード", ruby: "かめんらいだーまじぇーど", work: "仮面ライダーガッチャード", image: "", era: "令和", tag: "女性ライダー" },
             { name: "仮面ライダーガヴ", ruby: "かめんらいだーがゔ", work: "仮面ライダーガヴ", image: "", era: "令和", tag: "" },
             { name: "仮面ライダーヴァレン", ruby: "かめんらいだーゔぁれん", work: "仮面ライダーガヴ", image: "", era: "令和", tag: "" },
 
-            // 小説・舞台・ゲーム限定ライダーのサンプル（チェックボックス連動確認用）
+            // 小説・舞台・ゲーム限定ライダー
             { name: "仮面ライダープロトクウガ", ruby: "かめんらいだーぷろとくうが", work: "小説 仮面ライダークウガ", image: "", era: "平成1期", tag: "小説" },
             { name: "仮面ライダーシック", ruby: "かめんらいだーしっく", work: "小説 仮面ライダーW ～Zを継ぐ者～", image: "", era: "平成2期", tag: "小説" },
-            { name: "仮面ライダーイドunn", ruby: "かめんらいだーいどぅん", work: "小説 仮面ライダー鎧武", image: "", era: "平成2期", tag: "小説" },
+            { name: "仮面ライダーイドゥン", ruby: "かめんらいだーいどぅん", work: "小説 仮面ライダー鎧武", image: "", era: "平成2期", tag: "小説" },
             { name: "仮面ライダー斬月 カチドキアームズ", ruby: "かめんらいだーざんげつかちどきあーむず", work: "舞台 仮面ライダー斬月 -鎧武外伝-", image: "", era: "平成2期", tag: "舞台" },
             { name: "仮面ライダープロトガイム", ruby: "かめんらいだーぷろとがいむ", work: "舞台 仮面ライダー斬月 -鎧武外伝-", image: "", era: "平成2期", tag: "舞台" },
             { name: "仮面ライダーアークゼロワン", ruby: "かめんらいだーあーくぜろわん", work: "舞台 仮面ライダーゼロワン", image: "", era: "令和", tag: "舞台" },
@@ -544,6 +557,7 @@
         let elapsedTime = 0;              // 経過時間(ms)
         let timerInterval = null;         // setInterval ID
         let currentEraFilter = 'ALL';     // 'ALL' | '昭和' | '平成1期' | '平成2期' | '令和' ...
+        let currentWorkFilter = 'ALL';    // 'ALL' | 各初登場作品名（C列）
         let currentStatusFilter = 'ALL';  // 'ALL' | 'UNANSWERED' | 'ANSWERED'
         let currentGridSize = 'md';       // 'sm' | 'md' | 'lg'
         let showHints = false;            // ヒント表示ON/OFF
@@ -655,13 +669,13 @@
             s = s.replace(/[\u3041-\u3096]/g, function(ch) {
                 return String.fromCharCode(ch.charCodeAt(0) + 0x60);
             });
-            // 「ヴァ」「ヴィ」「ヴ」「ヴェ」「ヴォ」の揺れ対策としてそのまま保持しつつ記号・空白除去
+            // 記号・空白除去
             s = s.replace(/[\s　・･\-ー_〜~＝=：:（）()「」『』【】]/g, '');
             return s;
         }
 
         /**
-         * 1人のライダーデータ（A列:名前、B列:ルビ）から正解判定用のキーワード配列を生成
+         * 1人のライダーデータ（名前・ルビ）から正解判定用のキーワード配列を生成
          */
         function buildAcceptedKeywords(rider) {
             const rawCandidates = [rider.name, rider.ruby];
@@ -669,13 +683,11 @@
 
             rawCandidates.forEach(raw => {
                 if (!raw) return;
-                // パイプやスラッシュ等で複数書かれている場合にも対応
                 const parts = String(raw).split(/[|｜\/,、]+/);
                 parts.forEach(part => {
                     const cleaned = part.trim();
                     if (!cleaned) return;
 
-                    // そのまま正規化
                     const normFull = normalizeString(cleaned);
                     if (normFull) keywordSet.add(normFull);
 
@@ -713,17 +725,32 @@
             const isGame = t.includes('ゲーム');
             const isVisual = !isNovel && !isStage && !isGame;
 
-            // 常時右上に表示するタグは「小説」「舞台」「ゲーム」の3種類のみ（「映画」はヒントON時のみ表示）
+            // 常時表示するタグ（小説・舞台・ゲームのみ。父親や女性ライダー等は除外）
             const alwaysTags = [];
             if (isNovel) alwaysTags.push('小説');
             if (isStage) alwaysTags.push('舞台');
             if (isGame) alwaysTags.push('ゲーム');
 
-            return { isNovel, isStage, isMovie, isGame, isVisual, rawTag: t, alwaysTags };
+            return { isNovel, isStage, isMovie, isGame, isVisual, alwaysTags };
         }
 
         /**
-         * 現在のチェックボックス＆分類タブ設定に基づいて「出題対象となるライダー一覧」を返す
+         * タグ（映像化作品 / 小説 / 舞台 / ゲーム）のチェック状態に合致するかを判定するヘルパー
+         */
+        function matchesTagFilter(rider) {
+            const { isNovel, isStage, isGame, isVisual } = rider.tagInfo;
+            const anyChecked = filterVisualOnly || filterNovelOnly || filterStageOnly || filterGameOnly;
+            if (!anyChecked) return true;
+            return (
+                (filterVisualOnly && isVisual) ||
+                (filterNovelOnly && isNovel) ||
+                (filterStageOnly && isStage) ||
+                (filterGameOnly && isGame)
+            );
+        }
+
+        /**
+         * 現在のチェックボックス＆分類タブ＆作品フィルタ設定に基づいて「出題対象となるライダー一覧」を返す
          */
         function getActiveQuizRiders() {
             return riders.filter(r => {
@@ -732,22 +759,61 @@
                     return false;
                 }
 
-                // 2. F列（映像化作品 / 小説 / 舞台 / ゲーム）チェックボックス判定
-                const { isNovel, isStage, isGame, isVisual } = r.tagInfo;
-                const anyChecked = filterVisualOnly || filterNovelOnly || filterStageOnly || filterGameOnly;
-
-                // すべてチェックが外れている場合は全員を対象にする（0人防止）
-                if (!anyChecked) {
-                    return true;
+                // 2. C列（初登場作品）フィルター
+                if (currentWorkFilter !== 'ALL' && r.work !== currentWorkFilter) {
+                    return false;
                 }
 
-                return (
-                    (filterVisualOnly && isVisual) ||
-                    (filterNovelOnly && isNovel) ||
-                    (filterStageOnly && isStage) ||
-                    (filterGameOnly && isGame)
-                );
+                // 3. F列（映像化作品 / 小説 / 舞台 / ゲーム）チェックボックス判定
+                return matchesTagFilter(r);
             });
+        }
+
+        /**
+         * クリア時のシェア文言に入る「出題範囲」の文字列を生成
+         */
+        function getQuizRangeLabel(activePoolCount) {
+            const allTagsSelectedOrNone =
+                (filterVisualOnly && filterNovelOnly && filterStageOnly && filterGameOnly) ||
+                (!filterVisualOnly && !filterNovelOnly && !filterStageOnly && !filterGameOnly);
+
+            // 全ライダーが出題対象になっている場合は「全ライダー」
+            if (
+                riders.length > 0 &&
+                (activePoolCount === riders.length ||
+                    (currentEraFilter === 'ALL' && currentWorkFilter === 'ALL' && allTagsSelectedOrNone))
+            ) {
+                return '全ライダー';
+            }
+
+            const parts = [];
+
+            // 作品フィルタが指定されている場合は作品名を優先表示
+            if (currentWorkFilter !== 'ALL') {
+                parts.push(currentWorkFilter);
+            } else if (currentEraFilter !== 'ALL') {
+                parts.push(currentEraFilter);
+            }
+
+            // タグ条件の表記
+            if (!allTagsSelectedOrNone) {
+                if (filterVisualOnly && !filterNovelOnly && !filterStageOnly && !filterGameOnly) {
+                    if (currentWorkFilter === 'ALL') {
+                        parts.push('映像化作品のみ');
+                    }
+                } else {
+                    const tagParts = [];
+                    if (filterVisualOnly) tagParts.push('映像化作品');
+                    if (filterNovelOnly) tagParts.push('小説限定');
+                    if (filterStageOnly) tagParts.push('舞台限定');
+                    if (filterGameOnly) tagParts.push('ゲーム限定');
+                    if (tagParts.length > 0) {
+                        parts.push(tagParts.join('・'));
+                    }
+                }
+            }
+
+            return parts.length > 0 ? parts.join(' / ') : '全ライダー';
         }
 
         // ==================== CSVパーサー（2行目からデータ開始・6列仕様） ====================
@@ -757,7 +823,6 @@
                 .split(/\r?\n/)
                 .filter(l => l.trim().length > 0);
 
-            // 2行目からが情報なので最低2行必要（もし1行しかない場合はそのまま読む）
             if (lines.length === 0) return [];
 
             const parseRow = (rowStr) => {
@@ -785,20 +850,17 @@
             };
 
             const rows = lines.map(parseRow);
-
-            // ご指定通り「2段目からが情報」なので1行目（index 0）はヘッダーとしてスキップ
             const dataRows = rows.length >= 2 ? rows.slice(1) : rows;
             const parsedRiders = [];
 
             dataRows.forEach((cols) => {
                 if (!cols || cols.length === 0) return;
-                // A列(0): 名前, B列(1): ルビ, C列(2): 初登場作品, D列(3): 画像(スルー), E列(4): 分類, F列(5): タグ
                 const name = (cols[0] || '').trim();
-                if (!name) return; // A列が空の行はスキップ
+                if (!name) return;
 
                 const ruby = (cols[1] || '').trim();
                 const work = (cols[2] || '').trim() || '作品未設定';
-                const image = (cols[3] || '').trim(); // スルーでOK
+                const image = (cols[3] || '').trim();
                 const era = (cols[4] || '').trim() || '未分類';
                 const tag = (cols[5] || '').trim();
 
@@ -842,8 +904,48 @@
             }
 
             buildEraTabs();
+            buildWorkFilterOptions();
             updateCheckboxCounts();
             resetGame();
+        }
+
+        // ==================== C列（初登場作品）プルダウンの動的生成 ====================
+        function buildWorkFilterOptions() {
+            const selectEl = document.getElementById('workFilterSelect');
+            if (!selectEl) return;
+
+            // 現在の年代（E列）およびタグ条件に一致するライダーから作品一覧を集計
+            const baseRiders = riders.filter(r => {
+                if (currentEraFilter !== 'ALL' && r.era !== currentEraFilter) return false;
+                return matchesTagFilter(r);
+            });
+
+            const workCounts = new Map();
+            baseRiders.forEach(r => {
+                const w = r.work || '作品未設定';
+                workCounts.set(w, (workCounts.get(w) || 0) + 1);
+            });
+
+            // 現在選択中の作品が絞り込み後のリストに存在しない場合はALLにリセット
+            if (currentWorkFilter !== 'ALL' && !workCounts.has(currentWorkFilter)) {
+                currentWorkFilter = 'ALL';
+            }
+
+            selectEl.innerHTML = '';
+
+            const allOption = document.createElement('option');
+            allOption.value = 'ALL';
+            allOption.textContent = `すべての作品 (${baseRiders.length}人)`;
+            selectEl.appendChild(allOption);
+
+            workCounts.forEach((count, workTitle) => {
+                const opt = document.createElement('option');
+                opt.value = workTitle;
+                opt.textContent = `${workTitle} (${count}人)`;
+                selectEl.appendChild(opt);
+            });
+
+            selectEl.value = currentWorkFilter;
         }
 
         // ==================== E列（分類）タブの動的生成 ====================
@@ -880,6 +982,7 @@
                     }
                     currentEraFilter = eraKey;
                     buildEraTabs();
+                    buildWorkFilterOptions();
                     updateCheckboxCounts();
                     renderGrid();
                 });
@@ -890,11 +993,15 @@
 
         // ==================== チェックボックス横の人数バッジ更新 ====================
         function updateCheckboxCounts() {
-            const eraFiltered = riders.filter(r => currentEraFilter === 'ALL' || r.era === currentEraFilter);
-            const visualCount = eraFiltered.filter(r => r.tagInfo.isVisual).length;
-            const novelCount = eraFiltered.filter(r => r.tagInfo.isNovel).length;
-            const stageCount = eraFiltered.filter(r => r.tagInfo.isStage).length;
-            const gameCount = eraFiltered.filter(r => r.tagInfo.isGame).length;
+            const eraAndWorkFiltered = riders.filter(r => {
+                if (currentEraFilter !== 'ALL' && r.era !== currentEraFilter) return false;
+                if (currentWorkFilter !== 'ALL' && r.work !== currentWorkFilter) return false;
+                return true;
+            });
+            const visualCount = eraAndWorkFiltered.filter(r => r.tagInfo.isVisual).length;
+            const novelCount = eraAndWorkFiltered.filter(r => r.tagInfo.isNovel).length;
+            const stageCount = eraAndWorkFiltered.filter(r => r.tagInfo.isStage).length;
+            const gameCount = eraAndWorkFiltered.filter(r => r.tagInfo.isGame).length;
 
             document.getElementById('countVisualOnly').textContent = visualCount;
             document.getElementById('countNovelOnly').textContent = novelCount;
@@ -905,7 +1012,6 @@
         // ==================== 同階層の ./rider.csv 自動読込 ====================
         async function loadInitialCsvData() {
             const candidateFiles = ['./rider.csv', './riders.csv', './Rider.csv', './Riders.csv'];
-            let loadedData = null;
 
             for (const filePath of candidateFiles) {
                 try {
@@ -914,17 +1020,17 @@
                         const buffer = await response.arrayBuffer();
                         const text = decodeArrayBufferAuto(buffer);
                         const parsed = parseCSVText(text);
-                        if (parsed && parsed.length > 0) {
-                            loadedData = parsed;
-                            break;
+                        if (parsed.length > 0) {
+                            initializeRidersData(parsed);
+                            return;
                         }
                     }
                 } catch (err) {
-                    // fetch失敗時は次の候補へ
+                    // fetch失敗時は次の候補またはフォールバックデータへ
                 }
             }
 
-            initializeRidersData(loadedData || DEFAULT_RIDERS_DATA);
+            initializeRidersData(DEFAULT_RIDERS_DATA);
         }
 
         function decodeArrayBufferAuto(buffer) {
@@ -937,27 +1043,28 @@
             }
         }
 
-        // ==================== カードHTML生成（画像枠には「名前だけ」を表示） ====================
+        // ==================== カードHTML生成 ====================
         function createRiderCardElement(rider) {
             const card = document.createElement('div');
             card.id = `rider-card-${rider.index}`;
 
             const isOpened = rider.answered || rider.gaveUp;
 
-            // タグバッジ：「小説」「舞台」「ゲーム」は常時表示、「映画」はヒントON時のみ表示（それ以外のタグは非表示）
-            const visibleTags = [...(rider.tagInfo.alwaysTags || [])];
+            // タグバッジ表示制御：
+            // 小説・舞台・ゲームは常時表示、「映画」はヒントON時のみ表示、その他のタグ（父親・女性ライダーなど）は非表示
+            const visibleTags = [...rider.tagInfo.alwaysTags];
             if (showHints && rider.tagInfo.isMovie) {
                 visibleTags.push('映画');
             }
 
             let tagBadgeHtml = '';
             if (visibleTags.length > 0) {
-                tagBadgeHtml = visibleTags.map(tagName => {
+                tagBadgeHtml = visibleTags.map(t => {
                     let tagColorClass = 'bg-amber-950/90 text-amber-300 border-amber-600/50';
-                    if (tagName === '舞台') tagColorClass = 'bg-purple-950/90 text-purple-300 border-purple-600/50';
-                    if (tagName === '映画') tagColorClass = 'bg-sky-950/90 text-sky-300 border-sky-600/50';
-                    if (tagName === 'ゲーム') tagColorClass = 'bg-pink-950/90 text-pink-300 border-pink-600/50';
-                    return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${tagColorClass}">${escapeHtml(tagName)}</span>`;
+                    if (t === '舞台') tagColorClass = 'bg-purple-950/90 text-purple-300 border-purple-600/50';
+                    if (t === '映画') tagColorClass = 'bg-sky-950/90 text-sky-300 border-sky-600/50';
+                    if (t === 'ゲーム') tagColorClass = 'bg-pink-950/90 text-pink-300 border-pink-600/50';
+                    return `<span class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold border ${tagColorClass}">${escapeHtml(t)}</span>`;
                 }).join('');
             }
 
@@ -972,10 +1079,9 @@
                     : 'rider-name-frame-giveup';
 
                 const statusBadgeHtml = rider.answered
-                    ? `<span class="px-1.5 py-0.5 text-[10px] font-mono font-black rounded bg-amber-500 text-gray-950 shadow">OPEN</span>`
-                    : `<span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-red-600 text-white shadow">未回答</span>`;
+                    ? `<span class="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono font-black rounded bg-amber-500 text-gray-950 shadow">OPEN</span>`
+                    : `<span class="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded bg-red-600 text-white shadow">未回答</span>`;
 
-                // 名前の文字数に応じてフォントサイズを最適化（スマホ2列表示でも読みやすく調整）
                 const nameLen = rider.name.length;
                 let nameFontSize = 'text-sm sm:text-lg';
                 if (nameLen >= 16) {
@@ -986,8 +1092,8 @@
 
                 card.className = `group relative rounded-xl border-2 ${borderClass} overflow-hidden flex flex-col transition-all duration-300`;
                 card.innerHTML = `
-                    <!-- 画像枠風エリア：画像はスルーし、中央に「名前」だけを表示 -->
-                    <div class="relative aspect-[4/3] w-full ${frameBgClass} p-2 sm:p-3 flex flex-col items-center justify-center text-center overflow-hidden select-none">
+                    <!-- 画像枠風エリア：中央に「名前」だけを表示 -->
+                    <div class="relative aspect-[4/3] w-full ${frameBgClass} p-2.5 sm:p-3 flex flex-col items-center justify-center text-center overflow-hidden select-none">
                         <!-- 上部：番号＆ステータスバッジ -->
                         <div class="absolute top-1.5 left-1.5 right-1.5 flex items-center justify-between gap-1 pointer-events-none">
                             <span class="px-1.5 py-0.5 rounded bg-black/70 text-[9px] sm:text-[10px] font-mono font-bold text-gray-300 border border-white/10">
@@ -1005,7 +1111,7 @@
                         </div>
 
                         <!-- 下部：分類（昭和/平成/令和） -->
-                        <div class="absolute bottom-1 right-1.5 text-[9px] sm:text-[10px] font-bold text-gray-400 bg-black/60 px-1.5 py-0.2 rounded border border-white/5">
+                        <div class="absolute bottom-1.5 right-2 text-[9px] sm:text-[10px] font-bold text-gray-400 bg-black/60 px-1.5 py-0.2 rounded border border-white/5">
                             ${escapeHtml(rider.era)}
                         </div>
                     </div>
@@ -1025,15 +1131,29 @@
                 const rubyClean = (rider.ruby || rider.name).replace(/^(かめんらいだー|仮面ライダー|カメンライダー)/i, '');
                 const firstChar = rubyClean.charAt(0) || '?';
 
+                // ヒントON時は2段構成にして文字サイズを最適化し、長い作品名も見切れにくくする
+                const lockCircleHtml = showHints
+                    ? `<div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-950 border border-gray-800 flex items-center justify-center shadow-inner shrink-0 mt-3">
+                           <span class="font-mono text-[11px] sm:text-xs font-black text-gray-600">???</span>
+                       </div>`
+                    : `<div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gray-950 border border-gray-800 flex items-center justify-center shadow-inner">
+                           <span class="font-mono text-sm sm:text-base font-black text-gray-600">???</span>
+                       </div>`;
+
                 const hintBoxHtml = showHints
-                    ? `<div class="mt-1.5 px-2 py-1 rounded-lg bg-amber-950/70 border border-amber-600/40 text-amber-200 text-[10px] font-bold max-w-full truncate" title="${escapeHtml(rider.work)}">
-                         頭文字「${escapeHtml(firstChar)}」/ ${escapeHtml(rider.work)}
+                    ? `<div class="mt-1 w-full px-1.5 py-1 rounded-lg bg-amber-950/75 border border-amber-600/40 text-center flex flex-col items-center justify-center gap-0.5 overflow-hidden" title="頭文字「${escapeHtml(firstChar)}」 / 初登場: ${escapeHtml(rider.work)}">
+                         <div class="text-[10px] sm:text-[11px] font-black text-amber-300 leading-none">
+                             頭文字「${escapeHtml(firstChar)}」
+                         </div>
+                         <div class="text-[9px] sm:text-[10px] text-amber-100/90 font-bold leading-tight line-clamp-2 break-words w-full">
+                             ${escapeHtml(rider.work)}
+                         </div>
                        </div>`
                     : `<div class="text-[11px] text-gray-500 font-bold mt-1">${escapeHtml(rider.era)}</div>`;
 
                 card.className = `relative rounded-xl border border-gray-800 bg-gray-900/60 hover:border-gray-700 overflow-hidden flex flex-col transition`;
                 card.innerHTML = `
-                    <div class="relative aspect-[4/3] w-full flex flex-col items-center justify-center p-2.5 hero-stripes">
+                    <div class="relative aspect-[4/3] w-full flex flex-col items-center justify-center p-2 hero-stripes overflow-hidden">
                         <div class="absolute top-1.5 left-1.5 right-1.5 flex items-center justify-between gap-1">
                             <span class="px-1.5 py-0.5 rounded bg-gray-950/90 text-[10px] font-mono font-bold text-gray-500 border border-gray-800">
                                 No.${rider.id}
@@ -1042,9 +1162,7 @@
                                 ${tagBadgeHtml}
                             </div>
                         </div>
-                        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gray-950 border border-gray-800 flex items-center justify-center shadow-inner">
-                            <span class="font-mono text-sm sm:text-base font-black text-gray-600">???</span>
-                        </div>
+                        ${lockCircleHtml}
                         ${hintBoxHtml}
                     </div>
                     <div class="px-2 py-1.5 text-center bg-gray-950/90 border-t border-gray-800/80">
@@ -1081,10 +1199,8 @@
             const emptyMsg = document.getElementById('emptyStateMessage');
             mainContainer.innerHTML = '';
 
-            // 現在の出題対象ライダーを取得
             const activePool = getActiveQuizRiders();
 
-            // さらに表示ステータス（すべて / 未回答のみ / 正解済みのみ）で絞り込み
             const displayRiders = activePool.filter(r => {
                 if (currentStatusFilter === 'ANSWERED') return r.answered;
                 if (currentStatusFilter === 'UNANSWERED') return !r.answered;
@@ -1098,7 +1214,7 @@
             }
 
             if (filterSeriesSort) {
-                // 【シリーズソートON】：C列（初登場作品）ごとにグループ化して並べる
+                // 【シリーズソートON】：初登場作品ごとにグループ化して並べる
                 const workGroups = new Map();
                 displayRiders.forEach(r => {
                     const workTitle = r.work || '作品未設定';
@@ -1112,7 +1228,6 @@
                     const section = document.createElement('div');
                     section.className = 'space-y-2.5 bg-gray-900/35 p-3 sm:p-4 rounded-2xl border border-gray-800/80';
 
-                    // シリーズ内の全体の進捗を計算
                     const allInWork = activePool.filter(r => (r.work || '作品未設定') === workTitle);
                     const answeredInWork = allInWork.filter(r => r.answered).length;
                     const eraLabel = groupRiders[0]?.era || '';
@@ -1120,12 +1235,12 @@
                     const header = document.createElement('div');
                     header.className = 'flex flex-wrap items-center justify-between gap-2 border-b border-gray-800 pb-2';
                     header.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <span class="w-1.5 h-5 rounded-full bg-rider-red"></span>
-                            <h2 class="text-sm sm:text-base font-black text-white tracking-tight">${escapeHtml(workTitle)}</h2>
-                            <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px] font-bold">${escapeHtml(eraLabel)}</span>
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-1.5 h-5 rounded-full bg-rider-red shrink-0"></span>
+                            <h2 class="text-sm sm:text-base font-black text-white tracking-tight truncate">${escapeHtml(workTitle)}</h2>
+                            <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px] font-bold shrink-0">${escapeHtml(eraLabel)}</span>
                         </div>
-                        <div class="text-xs font-mono font-bold ${answeredInWork === allInWork.length ? 'text-amber-400' : 'text-gray-400'}">
+                        <div class="text-xs font-mono font-bold ${answeredInWork === allInWork.length ? 'text-amber-400' : 'text-gray-400'} shrink-0">
                             ${answeredInWork} / ${allInWork.length} 解放
                         </div>
                     `;
@@ -1142,7 +1257,7 @@
                     mainContainer.appendChild(section);
                 });
             } else {
-                // 【シリーズソートOFF】：CSV順のフラットなグリッド表示
+                // 【シリーズソートOFF】：フラットなグリッド表示
                 const grid = document.createElement('div');
                 grid.className = getGridClassName();
                 displayRiders.forEach(rider => {
@@ -1166,7 +1281,8 @@
 
             const pct = totalActive > 0 ? Math.round((answeredActive / totalActive) * 100) : 0;
             document.getElementById('progressBar').style.width = `${pct}%`;
-            // 各分類タブのバッジ更新（現在のタグ条件における各分類の人数を表示）
+
+            // 各分類タブのバッジ更新（現在のタグ条件＆作品条件における各分類の人数を表示）
             const eraButtons = document.querySelectorAll('#eraFilterContainer [data-era]');
             eraButtons.forEach(btn => {
                 const eraKey = btn.getAttribute('data-era');
@@ -1175,15 +1291,8 @@
 
                 const matchingRiders = riders.filter(r => {
                     if (eraKey !== 'ALL' && r.era !== eraKey) return false;
-                    const { isNovel, isStage, isGame, isVisual } = r.tagInfo;
-                    const anyChecked = filterVisualOnly || filterNovelOnly || filterStageOnly || filterGameOnly;
-                    if (!anyChecked) return true;
-                    return (
-                        (filterVisualOnly && isVisual) ||
-                        (filterNovelOnly && isNovel) ||
-                        (filterStageOnly && isStage) ||
-                        (filterGameOnly && isGame)
-                    );
+                    if (currentWorkFilter !== 'ALL' && r.work !== currentWorkFilter) return false;
+                    return matchesTagFilter(r);
                 });
 
                 const doneCount = matchingRiders.filter(r => r.answered).length;
@@ -1203,13 +1312,13 @@
         function updateTimerDisplay() {
             const t = formatTime(elapsedTime);
             const timerEl = document.getElementById('timerDisplay');
-            timerEl.innerHTML = `${t.minutes}:${t.seconds}.<span class="text-lg text-amber-400">${t.centiseconds}</span>`;
+            timerEl.innerHTML = `${t.minutes}:${t.seconds}.<span class="text-sm sm:text-lg text-amber-400">${t.centiseconds}</span>`;
         }
 
         function startTimer() {
             startTime = performance.now() - elapsedTime;
             const indicator = document.getElementById('timerIndicator');
-            indicator.className = 'w-3 h-3 rounded-full bg-rider-red animate-ping';
+            indicator.className = 'w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rider-red animate-ping shrink-0';
 
             timerInterval = setInterval(() => {
                 elapsedTime = performance.now() - startTime;
@@ -1223,7 +1332,7 @@
                 timerInterval = null;
             }
             const indicator = document.getElementById('timerIndicator');
-            indicator.className = 'w-3 h-3 rounded-full bg-amber-400';
+            indicator.className = 'w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400 shrink-0';
         }
 
         // ==================== 出題範囲チェックボックスのロック切替 ====================
@@ -1232,6 +1341,8 @@
             document.getElementById('chkNovelOnly').disabled = disabled;
             document.getElementById('chkStageOnly').disabled = disabled;
             document.getElementById('chkGameOnly').disabled = disabled;
+            const workSelect = document.getElementById('workFilterSelect');
+            if (workSelect) workSelect.disabled = disabled;
 
             const notice = document.getElementById('filterLockNotice');
             if (disabled) {
@@ -1251,7 +1362,7 @@
 
             const activePool = getActiveQuizRiders();
             if (activePool.length === 0) {
-                showFeedback('出題対象のライダーが0人です。上のチェックボックスを変更してください！', 'error');
+                showFeedback('出題対象のライダーが0人です。チェックボックスや作品フィルターを変更してください！', 'error');
                 return;
             }
 
@@ -1271,7 +1382,7 @@
             startBtn.innerHTML = `<i class="fa-solid fa-fire text-amber-300"></i><span>挑戦中...</span>`;
             startBtn.classList.add('opacity-60', 'pointer-events-none');
 
-            showFeedback(`タイマースタート！ 対象 ${activePool.length}人のライダー名またはルビを入力しよう！`, 'info');
+            showFeedback(`スタート！ 対象 ${activePool.length}人のライダー名を入力しよう！`, 'info');
             startTimer();
             input.focus();
         }
@@ -1303,7 +1414,7 @@
             startBtn.classList.remove('opacity-60', 'pointer-events-none');
 
             const answeredCount = activePool.filter(r => r.answered).length;
-            showFeedback(`ギブアップ！ 記録：${answeredCount} / ${activePool.length}人（未回答のライダーを赤枠で表示しました）`, 'warn');
+            showFeedback(`ギブアップ！ 記録：${answeredCount} / ${activePool.length}人`, 'warn');
             renderGrid();
         }
 
@@ -1315,7 +1426,7 @@
             setFilterCheckboxesDisabled(false);
 
             const indicator = document.getElementById('timerIndicator');
-            indicator.className = 'w-3 h-3 rounded-full bg-gray-600';
+            indicator.className = 'w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gray-600 shrink-0';
 
             riders.forEach(r => {
                 r.answered = false;
@@ -1336,7 +1447,7 @@
             startBtn.classList.remove('opacity-60', 'pointer-events-none');
 
             document.getElementById('recentHitBanner').classList.add('hidden');
-            showFeedback('漢字・ひらがな・カタカナ入力対応！「仮面ライダー」省略OK', 'default');
+            showFeedback('「仮面ライダー」は省略して入力できます', 'default');
 
             renderGrid();
         }
@@ -1348,7 +1459,6 @@
             const normalizedInput = normalizeString(rawInput);
             if (!normalizedInput) return;
 
-            // 「仮面ライダー」「かめんらいだー」を除いた入力文字列も用意
             const strippedInput = normalizeString(
                 rawInput.replace(/^(真・?|シン・?|新・?)?(仮面ライダー|かめんらいだー|カメンライダー)/i, '')
             );
@@ -1362,8 +1472,6 @@
             });
 
             if (unansweredMatches.length > 0) {
-                // 自動判定モード時、さらに長い名前の未回答ライダーの入力途中かどうかを確認
-                // ただしEnterが押された場合や、該当ライダー自体が未回答なら即座に解放する
                 unlockRiders(unansweredMatches);
                 document.getElementById('riderInput').value = '';
                 return;
@@ -1396,7 +1504,7 @@
             // 3. Enterキー押下時でどれにもヒットしなかった場合
             if (isEnterPressed) {
                 playSound('miss');
-                showFeedback(`「${rawInput}」に一致するライダーが出題対象に見つかりません`, 'error');
+                showFeedback(`「${rawInput}」に一致するライダーが見つかりません`, 'error');
                 const inputEl = document.getElementById('riderInput');
                 inputEl.classList.remove('animate-shake');
                 void inputEl.offsetWidth;
@@ -1416,7 +1524,7 @@
             const firstRider = matchedRiders[0];
 
             const namesStr = matchedRiders.map(r => r.name).join(' / ');
-            showFeedback(`正解！「${namesStr}」をオープンしました！`, 'success');
+            showFeedback(`正解！「${namesStr}」をオープン！`, 'success');
 
             const banner = document.getElementById('recentHitBanner');
             const hitText = document.getElementById('recentHitText');
@@ -1438,7 +1546,6 @@
                 }
             }
 
-            // 出題対象全員が埋まったらタイマーストップ！
             if (remainingCount === 0) {
                 handleGameClear(activePool.length);
             }
@@ -1483,26 +1590,26 @@
         function showFeedback(msg, type = 'default') {
             const el = document.getElementById('feedbackMessage');
             if (type === 'success') {
-                el.className = 'text-xs font-bold text-emerald-400 truncate min-h-[18px] flex items-center gap-1.5';
+                el.className = 'text-[11px] sm:text-xs font-bold text-emerald-400 truncate max-w-full sm:max-w-[62%] min-h-[16px] flex items-center gap-1';
                 el.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${escapeHtml(msg)}</span>`;
             } else if (type === 'warn') {
-                el.className = 'text-xs font-bold text-amber-400 truncate min-h-[18px] flex items-center gap-1.5';
+                el.className = 'text-[11px] sm:text-xs font-bold text-amber-400 truncate max-w-full sm:max-w-[62%] min-h-[16px] flex items-center gap-1';
                 el.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i><span>${escapeHtml(msg)}</span>`;
             } else if (type === 'error') {
-                el.className = 'text-xs font-bold text-red-400 truncate min-h-[18px] flex items-center gap-1.5';
+                el.className = 'text-[11px] sm:text-xs font-bold text-red-400 truncate max-w-full sm:max-w-[62%] min-h-[16px] flex items-center gap-1';
                 el.innerHTML = `<i class="fa-solid fa-circle-xmark"></i><span>${escapeHtml(msg)}</span>`;
             } else if (type === 'info') {
-                el.className = 'text-xs font-bold text-sky-400 truncate min-h-[18px] flex items-center gap-1.5';
+                el.className = 'text-[11px] sm:text-xs font-bold text-sky-400 truncate max-w-full sm:max-w-[62%] min-h-[16px] flex items-center gap-1';
                 el.innerHTML = `<i class="fa-solid fa-flag-checkered"></i><span>${escapeHtml(msg)}</span>`;
             } else {
-                el.className = 'text-xs font-bold text-gray-400 truncate min-h-[18px] flex items-center gap-1.5';
+                el.className = 'text-[11px] sm:text-xs font-bold text-gray-400 truncate max-w-full sm:max-w-[62%] min-h-[16px] flex items-center gap-1';
                 el.innerHTML = `<i class="fa-solid fa-circle-info text-amber-400"></i><span>${escapeHtml(msg)}</span>`;
             }
         }
 
         // ==================== イベントリスナー登録 ====================
         window.addEventListener('DOMContentLoaded', () => {
-            // 1. ライダーデータの自動ロード
+            // 1. 同階層の rider.csv 自動ロード
             loadInitialCsvData();
 
             // 2. ゲーム開始・ギブアップ・リセット
@@ -1534,6 +1641,7 @@
                     filterStageOnly = false;
                     filterGameOnly = false;
                 }
+                buildWorkFilterOptions();
                 updateCheckboxCounts();
                 renderGrid();
             });
@@ -1543,6 +1651,7 @@
                 filterNovelOnly = chkNovelOnly.checked;
                 filterStageOnly = chkStageOnly.checked;
                 filterGameOnly = chkGameOnly.checked;
+                buildWorkFilterOptions();
                 updateCheckboxCounts();
                 renderGrid();
             };
@@ -1550,6 +1659,18 @@
             chkNovelOnly.addEventListener('change', handleLimitedCheckboxChange);
             chkStageOnly.addEventListener('change', handleLimitedCheckboxChange);
             chkGameOnly.addEventListener('change', handleLimitedCheckboxChange);
+
+            // 作品ごとのフィルター変更イベント
+            document.getElementById('workFilterSelect').addEventListener('change', (e) => {
+                if (gameStatus === 'PLAYING') {
+                    showFeedback('プレイ中は作品フィルターを変更できません。リセット後に変更してください。', 'warn');
+                    e.target.value = currentWorkFilter;
+                    return;
+                }
+                currentWorkFilter = e.target.value;
+                updateCheckboxCounts();
+                renderGrid();
+            });
 
             // 4. 入力欄のイベント（自動判定 & Enter送信）
             const riderInput = document.getElementById('riderInput');
@@ -1586,7 +1707,7 @@
                 renderGrid();
             });
 
-            // 6. ヒント表示トグル
+            // 6. ヒント表示トグル（ONにすると未回答ヒント＋映画初出タグが表示される）
             const hintBtn = document.getElementById('hintToggleBtn');
             hintBtn.addEventListener('click', () => {
                 showHints = !showHints;
@@ -1603,9 +1724,9 @@
                 btn.addEventListener('click', () => {
                     currentGridSize = btn.getAttribute('data-size');
                     document.querySelectorAll('.size-btn').forEach(b => {
-                        b.className = 'size-btn px-2 py-1 rounded text-[11px] text-gray-400 hover:text-white transition';
+                        b.className = 'size-btn px-2 py-1 rounded text-xs text-gray-400 hover:text-white transition';
                     });
-                    btn.className = 'size-btn px-2 py-1 rounded text-[11px] bg-gray-700 text-white transition';
+                    btn.className = 'size-btn px-2 py-1 rounded text-xs bg-gray-700 text-white transition';
                     renderGrid();
                 });
             });
@@ -1617,7 +1738,7 @@
                 icon.className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark text-gray-500';
             });
 
-            // 9. クリアモーダル操作＆結果コピー
+            // 9. クリアモーダル操作＆X（旧Twitter）で記録をシェア
             const clearModal = document.getElementById('clearModal');
             document.getElementById('closeClearModalBtn').addEventListener('click', () => {
                 clearModal.classList.add('hidden');
@@ -1629,23 +1750,28 @@
                 resetGame();
                 startGame();
             });
-            document.getElementById('copyResultBtn').addEventListener('click', () => {
+            document.getElementById('shareResultBtn').addEventListener('click', () => {
                 const timeStr = document.getElementById('modalClearTime').textContent;
-                const countStr = document.getElementById('modalClearCount').textContent;
-                const shareText = `【仮面ライダー言えるかな？】\n出題ライダー（${countStr}人）を【${timeStr}】で完全制覇しました！ #仮面ライダー全部言えるかな`;
-                const tempInput = document.createElement('textarea');
-                tempInput.value = shareText;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
+                const activePool = getActiveQuizRiders();
+                const totalCleared = activePool.length;
+                const rangeLabel = getQuizRangeLabel(totalCleared);
+                const pageUrl = window.location.href;
 
-                const copyBtn = document.getElementById('copyResultBtn');
-                const originalHtml = copyBtn.innerHTML;
-                copyBtn.innerHTML = `<i class="fa-solid fa-check"></i><span>コピーしました！</span>`;
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalHtml;
-                }, 2000);
+                const shareText = `【仮面ライダー言えるかな？】\n${totalCleared}人を${timeStr}でクリアしました！\n出題範囲:${rangeLabel}\n${pageUrl}`;
+
+                // クリップボードにもバックアップコピー
+                try {
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = shareText;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                } catch (e) {}
+
+                // X (Twitter) のポスト画面を開く
+                const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+                window.open(tweetUrl, '_blank', 'noopener,noreferrer');
             });
         });
     </script>
