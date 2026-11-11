@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="ja" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -150,7 +150,6 @@
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded bg-rider-red/20 text-red-400 border border-red-500/30 font-bold">KAMEN RIDER QUIZ</span>
-                        <span id="dataSourceBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50 font-medium">rider.csv 読込中...</span>
                     </div>
                     <h1 class="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-1.5">
                         仮面ライダー<span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-yellow-300">言えるかな？</span>
@@ -158,14 +157,8 @@
                 </div>
             </div>
 
-            <!-- rider.csv 再読込・音声ボタン群 -->
+            <!-- 音声ボタン -->
             <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                <!-- rider.csv 再読込ボタン -->
-                <button id="reloadCsvBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/80 transition shadow-sm" title="rider.csv を再読み込みします">
-                    <i id="reloadCsvIcon" class="fa-solid fa-arrows-rotate text-emerald-400 text-xs"></i>
-                    <span>rider.csv 再読込</span>
-                </button>
-
                 <!-- 効果音ON/OFF -->
                 <button id="soundToggleBtn" class="p-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-600/80 transition" title="効果音 ON/OFF">
                     <i id="soundIcon" class="fa-solid fa-volume-high"></i>
@@ -232,7 +225,7 @@
                     <!-- フィードバックメッセージ＆自動判定オプション -->
                     <div class="flex flex-wrap items-center justify-between gap-2 mt-1.5 px-1">
                         <div id="feedbackMessage" class="text-xs font-bold text-gray-400 truncate min-h-[18px] flex items-center gap-1.5">
-                            <span><i class="fa-solid fa-circle-info text-amber-400 mr-1"></i>名前（A列）・ルビ（B列）に対応！「仮面ライダー」省略OK</span>
+                            <span><i class="fa-solid fa-circle-info text-amber-400 mr-1"></i>漢字・ひらがな・カタカナ入力対応！「仮面ライダー」省略OK</span>
                         </div>
                         <div class="flex items-center gap-3 text-xs text-gray-300 shrink-0">
                             <label class="inline-flex items-center gap-1 cursor-pointer select-none" title="入力中に一致したらEnter不要で即座に正解判定します">
@@ -341,20 +334,12 @@
                         <span id="countGameOnly" class="px-1.5 py-0.2 rounded bg-black/40 font-mono text-[10px] text-pink-300">0</span>
                     </div>
                 </label>
-
-                <!-- 限定ライダー選択時の補助オプション（限定のみ出題 or 映像化作品も含める） -->
-                <div id="limitedCombineOptionWrap" class="hidden items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-950/30 border border-amber-700/40 text-xs text-amber-200">
-                    <label class="cursor-pointer select-none inline-flex items-center gap-1.5">
-                        <input type="checkbox" id="chkIncludeVisualWithLimited" class="w-3.5 h-3.5 rounded accent-amber-400">
-                        <span class="font-bold text-[11px]">映像化作品も一緒に出題する</span>
-                    </label>
-                </div>
             </div>
         </div>
 
-        <!-- 下段：E列（昭和・平成1期・平成2期・令和など）分類タブ ＆ 表示フィルター -->
+        <!-- 下段：分類タブ ＆ 表示フィルター -->
         <div class="flex flex-wrap items-center justify-between gap-2">
-            <!-- 分類（E列）絞り込みタブ -->
+            <!-- 分類絞り込みタブ -->
             <div class="flex flex-wrap items-center gap-1.5" id="eraFilterContainer">
                 <!-- JSで動的に生成（すべて / 昭和 / 平成1期 / 平成2期 / 令和 ...） -->
             </div>
@@ -369,7 +354,7 @@
                 </select>
 
                 <!-- ヒント表示トグル -->
-                <button id="hintToggleBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-gray-900 hover:bg-gray-800 text-amber-400 border border-gray-700 transition flex items-center gap-1" title="未回答マスに初登場作品（C列）と頭文字ヒントを表示します">
+                <button id="hintToggleBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-gray-900 hover:bg-gray-800 text-amber-400 border border-gray-700 transition flex items-center gap-1" title="未回答マスに初登場作品と頭文字ヒントを表示します">
                     <i class="fa-regular fa-lightbulb"></i>
                     <span>ヒント: OFF</span>
                 </button>
@@ -577,7 +562,6 @@
         let filterNovelOnly = false;
         let filterStageOnly = false;
         let filterGameOnly = false;
-        let includeVisualWithLimited = false;
 
         // ==================== 効果音シンセサイザー (外部音源不要) ====================
         function playSound(type) {
@@ -735,14 +719,13 @@
             const isGame = t.includes('ゲーム');
             const isVisual = !isNovel && !isStage && !isGame;
 
-            // カード右上に表示するタグは「小説」「舞台」「映画」「ゲーム」の4種類のみに限定
-            const displayTags = [];
-            if (isNovel) displayTags.push('小説');
-            if (isStage) displayTags.push('舞台');
-            if (isMovie) displayTags.push('映画');
-            if (isGame) displayTags.push('ゲーム');
+            // 常時右上に表示するタグは「小説」「舞台」「ゲーム」の3種類のみ（「映画」はヒントON時のみ表示）
+            const alwaysTags = [];
+            if (isNovel) alwaysTags.push('小説');
+            if (isStage) alwaysTags.push('舞台');
+            if (isGame) alwaysTags.push('ゲーム');
 
-            return { isNovel, isStage, isMovie, isGame, isVisual, rawTag: t, displayTags };
+            return { isNovel, isStage, isMovie, isGame, isVisual, rawTag: t, alwaysTags };
         }
 
         /**
@@ -755,29 +738,21 @@
                     return false;
                 }
 
-                // 2. F列（映像化作品のみ / 小説 / 舞台 / ゲーム）チェックボックス判定
+                // 2. F列（映像化作品 / 小説 / 舞台 / ゲーム）チェックボックス判定
                 const { isNovel, isStage, isGame, isVisual } = r.tagInfo;
-                const anyLimitedChecked = filterNovelOnly || filterStageOnly || filterGameOnly;
+                const anyChecked = filterVisualOnly || filterNovelOnly || filterStageOnly || filterGameOnly;
 
-                if (filterVisualOnly) {
-                    // 「映像化作品のみ」にチェックが入っている場合
-                    return isVisual;
-                } else if (anyLimitedChecked) {
-                    // いずれかの限定ライダーにチェックが入っている場合
-                    const matchesCheckedLimited = 
-                        (filterNovelOnly && isNovel) ||
-                        (filterStageOnly && isStage) ||
-                        (filterGameOnly && isGame);
-
-                    if (includeVisualWithLimited) {
-                        return isVisual || matchesCheckedLimited;
-                    } else {
-                        return matchesCheckedLimited;
-                    }
-                } else {
-                    // もしすべてのチェックが外れている場合は全員を対象にする（0人防止）
+                // すべてチェックが外れている場合は全員を対象にする（0人防止）
+                if (!anyChecked) {
                     return true;
                 }
+
+                return (
+                    (filterVisualOnly && isVisual) ||
+                    (filterNovelOnly && isNovel) ||
+                    (filterStageOnly && isStage) ||
+                    (filterGameOnly && isGame)
+                );
             });
         }
 
@@ -847,7 +822,7 @@
         }
 
         // ==================== ライダーデータの初期化・セット ====================
-        function initializeRidersData(rawList, sourceLabel, isExternalCsv = false) {
+        function initializeRidersData(rawList) {
             riders = rawList.map((r, index) => {
                 const riderObj = {
                     index: index,
@@ -866,18 +841,18 @@
                 return riderObj;
             });
 
-            const badge = document.getElementById('dataSourceBadge');
-            if (isExternalCsv) {
-                badge.className = 'text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50 font-bold';
-                badge.textContent = `${sourceLabel} 読込完了 (全${riders.length}人)`;
-            } else {
-                badge.className = 'text-[10px] px-2 py-0.5 rounded bg-amber-950/90 text-amber-300 border border-amber-700/60 font-medium';
-                badge.textContent = `デモデータ表示中（同階層に rider.csv を置くと自動読込）`;
-            }
-
             // 現在の分類フィルタが存在しない値になっていたらALLに戻す
             const availableEras = new Set(riders.map(r => r.era));
             if (currentEraFilter !== 'ALL' && !availableEras.has(currentEraFilter)) {
+                currentEraFilter = 'ALL';
+            }
+
+            buildEraTabs();
+            updateCheckboxCounts();
+            resetGame();
+        }
+
+        // ==================== 分類タブの動的生成 ====================
                 currentEraFilter = 'ALL';
             }
 
@@ -940,25 +915,10 @@
             document.getElementById('countNovelOnly').textContent = novelCount;
             document.getElementById('countStageOnly').textContent = stageCount;
             document.getElementById('countGameOnly').textContent = gameCount;
-
-            // 限定ライダーのいずれかがONの時は「映像化作品も一緒に出題する」補助オプションを表示
-            const anyLimited = filterNovelOnly || filterStageOnly || filterGameOnly;
-            const combineWrap = document.getElementById('limitedCombineOptionWrap');
-            if (anyLimited && !filterVisualOnly) {
-                combineWrap.classList.remove('hidden');
-                combineWrap.classList.add('inline-flex');
-            } else {
-                combineWrap.classList.add('hidden');
-                combineWrap.classList.remove('inline-flex');
-            }
         }
 
         // ==================== 同階層の ./rider.csv 自動読込 ====================
         async function loadInitialCsvData() {
-            const reloadIcon = document.getElementById('reloadCsvIcon');
-            if (reloadIcon) reloadIcon.classList.add('animate-spin');
-
-            // 同階層の ./rider.csv を最優先で読み込み（万が一 ./riders.csv という名前の場合もフォールバック試行）
             const candidateFiles = ['./rider.csv', './riders.csv'];
 
             for (const filePath of candidateFiles) {
@@ -969,21 +929,16 @@
                         const text = decodeArrayBufferAuto(buffer);
                         const parsed = parseCSVText(text);
                         if (parsed.length > 0) {
-                            const fileName = filePath.replace('./', '');
-                            initializeRidersData(parsed, fileName, true);
-                            if (reloadIcon) reloadIcon.classList.remove('animate-spin');
+                            initializeRidersData(parsed);
                             return;
                         }
                     }
                 } catch (err) {
-                    // fetch失敗時は次の候補またはデモデータへ
+                    // fetch失敗時は次の候補または初期データへ
                 }
             }
 
-            // 同階層に rider.csv が見つからない場合（プレビュー画面など）はデモデータを使用
-            initializeRidersData(DEFAULT_RIDERS_DATA, 'デモデータ', false);
-            showFeedback('同階層の rider.csv が見つからないためデモデータを表示中（GitHubに index.html と rider.csv を一緒に置くと自動で読み込まれます）', 'info');
-            if (reloadIcon) reloadIcon.classList.remove('animate-spin');
+            initializeRidersData(DEFAULT_RIDERS_DATA);
         }
 
         function decodeArrayBufferAuto(buffer) {
@@ -1003,10 +958,15 @@
 
             const isOpened = rider.answered || rider.gaveUp;
 
-            // タグバッジ（小説 / 舞台 / 映画 / ゲーム のみ表示し、父親・女性ライダー等は表示しない）
+            // タグバッジ：「小説」「舞台」「ゲーム」は常時表示、「映画」はヒントON時のみ表示（それ以外のタグは非表示）
+            const visibleTags = [...(rider.tagInfo.alwaysTags || [])];
+            if (showHints && rider.tagInfo.isMovie) {
+                visibleTags.push('映画');
+            }
+
             let tagBadgeHtml = '';
-            if (rider.tagInfo.displayTags && rider.tagInfo.displayTags.length > 0) {
-                tagBadgeHtml = rider.tagInfo.displayTags.map(tagName => {
+            if (visibleTags.length > 0) {
+                tagBadgeHtml = visibleTags.map(tagName => {
                     let tagColorClass = 'bg-amber-950/90 text-amber-300 border-amber-600/50';
                     if (tagName === '舞台') tagColorClass = 'bg-purple-950/90 text-purple-300 border-purple-600/50';
                     if (tagName === '映画') tagColorClass = 'bg-sky-950/90 text-sky-300 border-sky-600/50';
@@ -1220,8 +1180,7 @@
 
             const pct = totalActive > 0 ? Math.round((answeredActive / totalActive) * 100) : 0;
             document.getElementById('progressBar').style.width = `${pct}%`;
-
-            // 各分類（E列）タブのバッジ更新（現在のタグ条件における各分類の人数を表示）
+            // 各分類タブのバッジ更新（現在のタグ条件における各分類の人数を表示）
             const eraButtons = document.querySelectorAll('#eraFilterContainer [data-era]');
             eraButtons.forEach(btn => {
                 const eraKey = btn.getAttribute('data-era');
@@ -1231,13 +1190,14 @@
                 const matchingRiders = riders.filter(r => {
                     if (eraKey !== 'ALL' && r.era !== eraKey) return false;
                     const { isNovel, isStage, isGame, isVisual } = r.tagInfo;
-                    const anyLimitedChecked = filterNovelOnly || filterStageOnly || filterGameOnly;
-                    if (filterVisualOnly) return isVisual;
-                    if (anyLimitedChecked) {
-                        const m = (filterNovelOnly && isNovel) || (filterStageOnly && isStage) || (filterGameOnly && isGame);
-                        return includeVisualWithLimited ? (isVisual || m) : m;
-                    }
-                    return true;
+                    const anyChecked = filterVisualOnly || filterNovelOnly || filterStageOnly || filterGameOnly;
+                    if (!anyChecked) return true;
+                    return (
+                        (filterVisualOnly && isVisual) ||
+                        (filterNovelOnly && isNovel) ||
+                        (filterStageOnly && isStage) ||
+                        (filterGameOnly && isGame)
+                    );
                 });
 
                 const doneCount = matchingRiders.filter(r => r.answered).length;
@@ -1286,7 +1246,6 @@
             document.getElementById('chkNovelOnly').disabled = disabled;
             document.getElementById('chkStageOnly').disabled = disabled;
             document.getElementById('chkGameOnly').disabled = disabled;
-            document.getElementById('chkIncludeVisualWithLimited').disabled = disabled;
 
             const notice = document.getElementById('filterLockNotice');
             if (disabled) {
@@ -1391,7 +1350,7 @@
             startBtn.classList.remove('opacity-60', 'pointer-events-none');
 
             document.getElementById('recentHitBanner').classList.add('hidden');
-            showFeedback('名前（A列）・ルビ（B列）に対応！「仮面ライダー」省略OK', 'default');
+            showFeedback('漢字・ひらがな・カタカナ入力対応！「仮面ライダー」省略OK', 'default');
 
             renderGrid();
         }
@@ -1557,30 +1516,20 @@
 
         // ==================== イベントリスナー登録 ====================
         window.addEventListener('DOMContentLoaded', () => {
-            // 1. 同階層の rider.csv 自動ロード
+            // 1. ライダーデータの自動ロード
             loadInitialCsvData();
-
-            // rider.csv 再読込ボタン
-            document.getElementById('reloadCsvBtn').addEventListener('click', () => {
-                if (gameStatus === 'PLAYING') {
-                    showFeedback('プレイ中は再読込できません。リセット後に実行してください。', 'warn');
-                    return;
-                }
-                loadInitialCsvData();
-            });
 
             // 2. ゲーム開始・ギブアップ・リセット
             document.getElementById('startBtn').addEventListener('click', startGame);
             document.getElementById('giveUpBtn').addEventListener('click', giveUpGame);
             document.getElementById('resetBtn').addEventListener('click', resetGame);
 
-            // 3. チェックボックス連動ロジック（重要要件）
+            // 3. チェックボックス連動ロジック
             const chkSeriesSort = document.getElementById('chkSeriesSort');
             const chkVisualOnly = document.getElementById('chkVisualOnly');
             const chkNovelOnly = document.getElementById('chkNovelOnly');
             const chkStageOnly = document.getElementById('chkStageOnly');
             const chkGameOnly = document.getElementById('chkGameOnly');
-            const chkIncludeVisual = document.getElementById('chkIncludeVisualWithLimited');
 
             // シリーズソートはプレイ中でもリアルタイム切り替え可能
             chkSeriesSort.addEventListener('change', () => {
@@ -1598,27 +1547,16 @@
                     filterNovelOnly = false;
                     filterStageOnly = false;
                     filterGameOnly = false;
-                } else {
-                    // もしすべてOFFになった場合は小説・舞台・ゲームのいずれもONでなければ全ライダー対象になる
                 }
                 updateCheckboxCounts();
                 renderGrid();
             });
 
-            // 「小説限定」「舞台限定」「ゲーム限定」にチェックを入れたら → 自動的に「映像化作品のみ」のチェックを外す
+            // 「小説限定」「舞台限定」「ゲーム限定」のチェック変更時は「映像化作品のみ」のチェックを外さずそのまま反映する
             const handleLimitedCheckboxChange = () => {
                 filterNovelOnly = chkNovelOnly.checked;
                 filterStageOnly = chkStageOnly.checked;
                 filterGameOnly = chkGameOnly.checked;
-
-                if (filterNovelOnly || filterStageOnly || filterGameOnly) {
-                    chkVisualOnly.checked = false;
-                    filterVisualOnly = false;
-                } else {
-                    // 限定チェックがすべて外されたら自動的に「映像化作品のみ」をONに戻す
-                    chkVisualOnly.checked = true;
-                    filterVisualOnly = true;
-                }
                 updateCheckboxCounts();
                 renderGrid();
             };
@@ -1626,11 +1564,6 @@
             chkNovelOnly.addEventListener('change', handleLimitedCheckboxChange);
             chkStageOnly.addEventListener('change', handleLimitedCheckboxChange);
             chkGameOnly.addEventListener('change', handleLimitedCheckboxChange);
-
-            chkIncludeVisual.addEventListener('change', () => {
-                includeVisualWithLimited = chkIncludeVisual.checked;
-                renderGrid();
-            });
 
             // 4. 入力欄のイベント（自動判定 & Enter送信）
             const riderInput = document.getElementById('riderInput');
