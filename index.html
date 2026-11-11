@@ -1700,7 +1700,7 @@
             document.getElementById('copyResultBtn').addEventListener('click', () => {
                 const timeStr = document.getElementById('modalClearTime').textContent;
                 const countStr = document.getElementById('modalClearCount').textContent;
-                const shareText = `【仮面ライダー全部言えるかな？】\n出題ライダー（${countStr}人）を【${timeStr}】で完全制覇しました！ #仮面ライダー全部言えるかな`;
+                const shareText = `【仮面ライダー言えるかな？】\n出題ライダー（${countStr}人）を【${timeStr}】で完全制覇しました！ #仮面ライダー全部言えるかな`;
                 const tempInput = document.createElement('textarea');
                 tempInput.value = shareText;
                 document.body.appendChild(tempInput);
